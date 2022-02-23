@@ -1,8 +1,7 @@
 # file for the database
-
+from flask_login import UserMixin
 from app import db
 
-# basic models for now, relationships to be added later
 class Users(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -10,19 +9,36 @@ class Users(db.Model):
     email = db.Column(db.String(200), unique=True)
     password = db.Column(db.String(100))
     age = db.Column(db.Integer)
-    #card details - have a separate model ?
-    #booking = will have a relationship with Scooters via the Bookings model
+    #one-to-many relationship, a user can have multiple cards
+    cards = db.relationship('CardDetails', backref='users', lazy='dynamic')
+    #many-to-many relationship for booking scooters
+    booking = db.relationship('Book', foreign_keys='Book.user_id', backref='users', lazy='dynamic')
+
+    #methods for booking to be added in next sprints
+
+
+class CardDetails(db.Model):
+    __tablename__ = 'cards'
+    id = db.Column(db.Integer, primary_key=True)
+    number = db.Column(db.String(200), unique=True)
+    name = db.Column(db.String(200))
+    security_code = db.Column(db.String(100))
+    expiration_date = db.Column(db.String(200))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
 class Scooters(db.Model):
     __tablename__ = 'scooters'
     id = db.Column(db.Integer, primary_key=True)
     available = db.Column(db.Integer) # 0 if available, 1 if being used
-    # location - will have a relationship with the Location model
+    location = db.Column(db.Integer, db.ForeignKey('locations.id'))
+    booking = db.relationship('Book', backref='scooters', lazy='dynamic')
 
-class Locations(db.Models):
+class Locations(db.Model):
     __tablename__ = 'locations'
     id = db.Column(db.Integer, primary_key=True)
-    # available scooters - will have a relationship with the Scooters model
+    #one-to-many relationship, each location might have many scooters
+    #only include available scooters
+    scooters = db.relationship('Scooters', backref='locations', lazy='dynamic')
 
 class Staff(db.Model):
     __tablename__ = 'staff'
@@ -31,13 +47,18 @@ class Staff(db.Model):
     email = db.Column(db.String(200), unique=True)
     password = db.Column(db.String(100))
 
-class Bokings(db.Model):
+#many-to-many relationship
+#each user can book multiple scooters and each scooter can be booked by multiple users (one at a time)
+class Book(db.Model):
     __tablename__ = 'bookings'
     id = db.Column(db.Integer, primary_key=True)
-    # other fields will come from Users-Scooters relationship
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    scooter_id = db.Column(db.Integer, db.ForeignKey('scooters.id'))
+
 
 #store rates and calculate price for each booking
 #draft version, to be confirmed
+#duration could be a primary_key ?
 class Prices(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     duration = db.Column(db.Integer)
