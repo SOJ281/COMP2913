@@ -36,7 +36,7 @@ class TestCase(unittest.TestCase):
     def register(self, name, age, email, password):
         return self.app.post( '/signup', data=dict(name=name, age=age, email=email, password=password), follow_redirects=True)
  
-    def login(self, email, password):
+    def login(self, name, password):
         return self.app.post('/login', data=dict(name=name, password=password), follow_redirects=True)
 
 if __name__ == '__main__':
