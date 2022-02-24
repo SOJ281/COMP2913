@@ -13,6 +13,8 @@ def login():
         form = LoginForm(request.form)
         # get and check input login information form, if true then redirect to the homepage
         if form.validate():
+            email = form.email.data
+            password = form.password.data
             return redirect("/staff")
         else:
             return "Your input format is wrong!"
