@@ -1,13 +1,17 @@
-from flask_wtf import Form
-from wtforms import StringField, PasswordField, IntegerField
+import wtforms
+from wtforms.validators import length, email
 from wtforms.validators import DataRequired
 
-class SignupForm(Form):
-    name = StringField('Name', validators=[DataRequired()])
-    age = IntegerField('Age', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
 
-class LoginForm(Form):
-    email = StringField('Name', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
+class LoginForm(wtforms.Form):
+    email = wtforms.StringField(validators=[length(min=5,max=20), email()])
+    password = wtforms.StringField(validators=[length(min=6, max=20)])
+
+
+class SignupForm(wtforms.Form):
+    name = wtforms.StringField('Name', validators=[DataRequired()])
+    age = wtforms.IntegerField('Age', validators=[DataRequired()])
+    email = wtforms.StringField('Email', validators=[DataRequired()])
+    password = wtforms.StringField('Password', validators=[DataRequired()])
+
+
