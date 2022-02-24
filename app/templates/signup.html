@@ -2,21 +2,43 @@
 
 {% block content %}
     <h1>Sign Up</h1>
-    <form action="" method="post" name="signup">
-  
-    <p>
-      {{ form.name }}<br>
-    </p>
-    <p>
-      {{ form.age }}<br>
-    </p>
-    <p>
-      {{ form.email }}<br>
-    </p>
-    <p>
-      {{ form.password }}
-    </p>
-    <p><input type="submit" value="Sign Up"></p>
-</form>
+    <form action="/signup" method="post" name="signup">
+    <table>
+        <tr>
+            <td>name:
+            </td>
+            <td>
+                <input type="text" name="name">
+            </td>
+        </tr>
+        <tr>
+            <td>age:
+            </td>
+            <td>
+                <input type="text" name="age">
+            </td>
+        </tr>
+        <tr>
+            <td>email:
+            </td>
+            <td>
+                <input type="text" name="email">
+            </td>
+        </tr>
+        <tr>
+            <td>password:</td>
+            <td><input type="text" name="password"></td>
+        </tr>
+        <tr>
+            <td>confirm password:</td>
+            <td><input type="text" name="pw_confirm"></td>
+        </tr>
+        <tr>
+            <td>
+               <p><input type="submit" value="Sign Up"></p>
+            </td>
+        </tr>
+    </table>
 
+</form>
 {% endblock %}
