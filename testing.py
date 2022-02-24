@@ -30,14 +30,14 @@ class TestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_valid_user_login(self):
-        response = self.login('scottJames44@gmail.com', 'Pa55W0rd')
+        response = self.login('Scott', 'Pa55W0rd')
         self.assertEqual(response.status_code, 200)
 
     def register(self, name, age, email, password):
         return self.app.post( '/signup', data=dict(name=name, age=age, email=email, password=password), follow_redirects=True)
  
     def login(self, email, password):
-        return self.app.post('/login', data=dict(email=email, password=password), follow_redirects=True)
+        return self.app.post('/login', data=dict(name=name, password=password), follow_redirects=True)
 
 if __name__ == '__main__':
     unittest.main()
