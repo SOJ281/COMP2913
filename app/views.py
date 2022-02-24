@@ -13,9 +13,7 @@ def login():
         form = LoginForm(request.form)
         # get and check input login information form, if true then redirect to the homepage
         if form.validate():
-            email = form.email.data
-            password = form.password.data
-            return redirect("/staff")
+            return redirect("/booking")
         else:
             return "Your input format is wrong!"
 
@@ -26,10 +24,10 @@ def staff():
        return render_template("staff.html")
 
 
-@app.route("/user", methods=['GET', 'POST'])
-def user():
+@app.route("/booking", methods=['GET', 'POST'])
+def booking():
     if request.method == 'GET':
-       return render_template("user.html")
+       return render_template("booking.html")
 
 
 @app.route("/signup", methods=['GET', 'POST'])
