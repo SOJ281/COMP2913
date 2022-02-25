@@ -1,11 +1,11 @@
 import wtforms
-from wtforms.validators import length, email,EqualTo
+from wtforms.validators import length,EqualTo
 from wtforms.validators import DataRequired
 
 
 class LoginForm(wtforms.Form):
     email = wtforms.StringField('Email', validators=[DataRequired
-            (message=u"Email cannot be empty"), length(min=5, max=20), email()])
+            (message=u"Email cannot be empty"), length(min=5, max=20)])
     password = wtforms.StringField('Password', validators=[DataRequired
             (message=u'Password cannot be empty'), length(min=6, max=20)])
 
@@ -16,7 +16,7 @@ class SignupForm(wtforms.Form):
     age = wtforms.IntegerField('Age', validators=[DataRequired
             (message=u'age cannot be empty')])
     email = wtforms.StringField('Email', validators=[DataRequired
-            (message=u'Email cannot be empty'), length(min=5, max=20), email()])
+            (message=u'Email cannot be empty'), length(min=5, max=20)])
     password = wtforms.StringField('Password', validators=[DataRequired
             (message=u'Password cannot be empty'), length(min=6, max=20)])
     pw_confirm = wtforms.StringField('Confirm Password', validators=[EqualTo("password")])

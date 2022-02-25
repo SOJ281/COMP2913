@@ -1,8 +1,9 @@
 from flask import Flask, request, redirect, url_for, render_template
-from forms import LoginForm, SignupForm
+from .forms import LoginForm, SignupForm
+from app import app, models, db
 
-app = Flask(__name__)
-app.config['JSON_AS_ASCII'] = False
+# app = Flask(__name__)
+# app.config['JSON_AS_ASCII'] = False
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -47,5 +48,5 @@ def signup():
             return "Your input format is wrong!"
 
 
-if __name__ == '__main__':
-    app.run()
+# if __name__ == '__main__':
+#   app.run()
