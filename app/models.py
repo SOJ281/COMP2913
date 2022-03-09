@@ -9,6 +9,8 @@ class Users(UserMixin, db.Model):
     email = db.Column(db.String(200), unique=True)
     password = db.Column(db.String(100))
     age = db.Column(db.Integer)
+    # staff will be pre-added to the database
+    staff = db.Column(db.Boolean, default=False)
     #one-to-many relationship, a user can have multiple cards
     cards = db.relationship('CardDetails', backref='users', lazy='dynamic')
     #many-to-many relationship for booking scooters
@@ -40,12 +42,6 @@ class Locations(db.Model):
     #only include available scooters
     scooters = db.relationship('Scooters', backref='locations', lazy='dynamic')
 
-class Staff(db.Model):
-    __tablename__ = 'staff'
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), unique=True)
-    email = db.Column(db.String(200), unique=True)
-    password = db.Column(db.String(100))
 
 #many-to-many relationship
 #each user can book multiple scooters and each scooter can be booked by multiple users (one at a time)

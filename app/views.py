@@ -21,7 +21,10 @@ def login():
             flash('Login details incorrect. Try again!')
             return render_template("login.html", form=form)
         login_user(user)
-        return redirect(url_for('booking'))
+        if user.staff==True:
+            return redirect(url_for('staff'))
+        else:
+            return redirect(url_for('booking'))
     return render_template("login.html", form=form)
 
 
