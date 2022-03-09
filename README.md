@@ -22,6 +22,15 @@ This is an instruction how to run the project on a Linux machine (assumming that
 
 5. Open a browser and go to "localhost:5000". This should load the project in the browser. 
 
+## Staff login
+
+Staff details will be pre-saved in the database meaning there will be no registration option for staff, only login. 
+
+One staff member has been added for now: 
+
+email: staff_1@gmail.com \
+password: password12345
+
 
 
 
