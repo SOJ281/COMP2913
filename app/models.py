@@ -50,6 +50,7 @@ class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     scooter_id = db.Column(db.Integer, db.ForeignKey('scooters.id'))
+    price_id = db.Column(db.Integer, db.ForeignKey('prices.id'))
 
 
 #store rates and calculate price for each booking
@@ -59,4 +60,4 @@ class Prices(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     duration = db.Column(db.Integer)
     cost = db.Column(db.Integer)
-
+    booking = db.relationship('Book', backref='prices', lazy='dynamic')
