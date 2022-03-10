@@ -42,6 +42,16 @@ class Locations(db.Model):
     #only include available scooters
     scooters = db.relationship('Scooters', backref='locations', lazy='dynamic')
 
+#store rates and calculate price for each booking
+#draft version, to be confirmed
+#duration could be a primary_key ?
+class Prices(db.Model):
+    __tablename__ = 'prices'
+    id = db.Column(db.Integer, primary_key=True)
+    duration = db.Column(db.Integer)
+    cost = db.Column(db.Integer)
+    booking = db.relationship('Book', backref='prices', lazy='dynamic')
+
 
 #many-to-many relationship
 #each user can book multiple scooters and each scooter can be booked by multiple users (one at a time)
@@ -53,11 +63,3 @@ class Book(db.Model):
     price_id = db.Column(db.Integer, db.ForeignKey('prices.id'))
 
 
-#store rates and calculate price for each booking
-#draft version, to be confirmed
-#duration could be a primary_key ?
-class Prices(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    duration = db.Column(db.Integer)
-    cost = db.Column(db.Integer)
-    booking = db.relationship('Book', backref='prices', lazy='dynamic')
