@@ -1,5 +1,5 @@
 from flask import Flask, request, redirect, url_for, render_template, flash
-from .forms import LoginForm, SignupForm
+from .forms import LoginForm, SignupForm, BookingForm
 from app import app, models, db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user, logout_user
@@ -34,8 +34,34 @@ def staff():
 
 
 @app.route("/booking", methods=['GET', 'POST'])
+@login_required
 def booking():
-   return render_template("booking.html")
+    form = BookingForm()
+    if form.validate_on_submit():
+        duration = request.form.get('duration')
+        location = request.form.get('location')
+
+        scooter = models.Scooters.query.filter_by(location=location, available=0).first()
+        price = models.Prices.query.filter_by(duration=duration).first()
+
+        #check if scooter at the location is free
+        if scooter is None:
+            flash('No scooter available at location!')
+            return render_template("booking.html", form=form)
+
+        #check if card payment successfully
+        #changes after implementing card payments
+        paid_successfully = False
+        if not paid_successfully:
+            flash('Payment Unsuccessful!')
+            return render_template("booking.html", form=form)
+
+        new_booking = models.Book(user_id=current_user.id, scooter_id=scooter.id, price_id=price.id)
+        scooter.available = 1
+        db.session.add(new_booking)
+        db.session.commit()
+        flash('Scooter booked successfully!')
+    return render_template("booking.html", form=form)
 
 
 @app.route("/signup", methods=['GET', 'POST'])
@@ -52,7 +78,7 @@ def signup():
             flash("Passwords don't match. Try again!")
             # for now the whole form will be reload if passwords don't match
             #later try to reset only password fields
-            render_template("signup.html", form=form) 
+            render_template("signup.html", form=form)
         user = models.Users.query.filter_by(email=email).first() # checking if email address already in database
         if user:
             flash("An account with this email address already exists!")
@@ -62,5 +88,3 @@ def signup():
         db.session.commit()
         return redirect(url_for("login"))
     return render_template("signup.html", form=form)
-
-
