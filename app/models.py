@@ -62,3 +62,4 @@ class Book(db.Model):
     scooter_id = db.Column(db.Integer, db.ForeignKey('scooters.id'))
     price_id = db.Column(db.Integer, db.ForeignKey('prices.id'))
     datetime = db.Column(db.DateTime)
+    completed = db.Column(db.Integer) #1 if booking completed, #0 if still going on
