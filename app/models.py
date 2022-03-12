@@ -61,5 +61,4 @@ class Book(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     scooter_id = db.Column(db.Integer, db.ForeignKey('scooters.id'))
     price_id = db.Column(db.Integer, db.ForeignKey('prices.id'))
-
-
+    datetime = db.Column(db.DateTime)
