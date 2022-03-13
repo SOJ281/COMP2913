@@ -3,6 +3,8 @@ from .forms import LoginForm, SignupForm, BookingForm
 from app import app, models, db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user, logout_user
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime, timedelta
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -88,3 +90,16 @@ def signup():
         db.session.commit()
         return redirect(url_for("login"))
     return render_template("signup.html", form=form)
+
+
+@app.route('/income', methods=['GET', 'POST'])
+def priceview():
+    time_now = datetime.now()
+    date = Book.query.filter(Book.datetime >= time_now - timedelta(days=7)).all()
+    income = 0
+    for i in date:
+        print(i.price_id, i.datetime,)
+        print(i.prices.duration, i.prices.cost)
+        income += (i.prices.duration * i.prices.cost)
+    print(income)
+    return str(income)
