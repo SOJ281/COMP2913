@@ -95,7 +95,7 @@ def signup():
 @app.route('/income', methods=['GET', 'POST'])
 def priceview():
     time_now = datetime.now()
-    date = Book.query.filter(Book.datetime >= time_now - timedelta(days=7)).all() #search the price_id that during 7 days
+    date = models.Book.query.filter(datetime >= time_now - timedelta(days=7)).all() #search the price_id that during 7 days
     income = 0
     for i in date:
         print(i.price_id, i.datetime,)
