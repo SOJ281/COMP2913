@@ -6,6 +6,17 @@ from flask_login import login_user, login_required, current_user, logout_user
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 
+@app.route('/first', methods=['GET', 'POST'])
+def first():
+    return render_template("first_item.html")
+
+@app.route('/second', methods=['GET', 'POST'])
+def second():
+    return render_template("second_item.html")
+
+@app.route('/success', methods=['GET', 'POST'])
+def success():
+    return render_template("success.html")
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -95,7 +106,7 @@ def signup():
 @app.route('/income', methods=['GET', 'POST'])
 def priceview():
     time_now = datetime.now()
-    date = models.Book.query.filter(datetime >= time_now - timedelta(days=7)).all() #search the price_id that during 7 days
+    date = models.Book.query.filter(models.Book.datetime >= time_now - timedelta(days=7)).all() #search the price_id that during 7 days
     income = 0
     for i in date:
         print(i.price_id, i.datetime,)
