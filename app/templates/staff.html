@@ -2,12 +2,11 @@
 
 {% block content %}
 <h1>Staff</h1>
-<table>
 
+<table>
     <thread>
         <tr>
             <th>Scooter ID</th>
-            <th>Price</th>
             <th>Location</th>
             <th>Available</th>
             <th></th>
@@ -16,15 +15,20 @@
     <tbody>
     {% for scooter in Scooters %}
     <tr>
-            <td>{{scooter.id}}</td>
-            <td>{{scooter}}</td>
+            <td>{{scooter.id}}</td>   
             <td>{{scooter.location}}</td>
-            <td>{{scooter.available}}</td>
+            {% if scooter.available == 1 %}
+            <td>Available</td>
+            {% else %}
+            <td>Unavailable</td>
+            {% endif %}
             <td><a href="/config_scooter/{{scooter.id}}"><button type="button">Configure</button></a></td>           
     </tr>
     {% endfor %}
     <p>weekly income view</p>
     <button onclick="location.href='/income'">Click Me</button>
+    <p>add scooter</p>
+    <button onclick="location.href='/add_scooter'">Click Me</button>
     <p id="price_view"></p>
     </tbody>
 </table>

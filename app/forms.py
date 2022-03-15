@@ -26,3 +26,10 @@ class BookingForm(FlaskForm):
             (message=u'Duration is required')])
         location = StringField('Location', validators=[DataRequired
             (message=u'Location is required')])
+
+
+class ScooterForm(FlaskForm):
+        available = IntegerField('Available', validators=[DataRequired
+            (message=u'Available is required')])
+        location = StringField('Location', validators=[DataRequired
+            (message=u'Location is required')])

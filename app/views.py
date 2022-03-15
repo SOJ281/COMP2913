@@ -1,5 +1,6 @@
 from flask import Flask, request, redirect, url_for, render_template, flash
-from .forms import LoginForm, SignupForm, BookingForm
+
+from .forms import LoginForm, SignupForm, BookingForm,ScooterForm
 from app import app, models, db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user, logout_user
@@ -43,7 +44,27 @@ def login():
 
 @app.route("/staff", methods=['GET', 'POST'])
 def staff():
-    return render_template("staff.html")
+    scooters = []
+    for i in models.Scooters.query.all():
+        scooters.append(i)
+    return render_template("staff.html",Scooters = scooters)
+
+@app.route("/add_scooter", methods=['GET', 'POST'])
+def add_scooter():
+    form = ScooterForm()
+    if form.validate_on_submit():
+        available = request.form.get('available')
+        location = request.form.get('location')
+       
+        new_scooter = models.Scooters(available = available, location = location)
+        new_locaion = models.Locations()
+        db.session.add(new_scooter)
+        db.session.commit()
+        
+        return redirect(url_for("staff"))
+        
+    return render_template("add_scooter.html",form = form)
+
 
 
 @app.route("/booking", methods=['GET', 'POST'])

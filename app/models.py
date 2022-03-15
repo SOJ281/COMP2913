@@ -31,7 +31,7 @@ class CardDetails(db.Model):
 class Scooters(db.Model):
     __tablename__ = 'scooters'
     id = db.Column(db.Integer, primary_key=True)
-    available = db.Column(db.Integer) # 0 if available, 1 if being used
+    available = db.Column(db.Integer) # 1 if available, 2 if being used
     location = db.Column(db.Integer, db.ForeignKey('locations.id'))
     booking = db.relationship('Book', backref='scooters', lazy='dynamic')
 
