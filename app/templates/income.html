@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+    <head><link href="/static/table.css" rel="stylesheet" type="text/css"></head>
+<body>
+<table>
+    <caption>Scoot income report</caption>
+    <thead>
+        <tr>
+            <th>Datetime</th>
+            <th>income</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                Daily
+            </td>
+            <td>
+                {{income_three}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                weekly
+            </td>
+            <td>
+               {{income_one}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Monthly
+            </td>
+            <td>
+                {{income_two}}
+            </td>
+        </tr>
+    </tbody>
+    </table>
+</body>
+{% endblock %}
