@@ -1,0 +1,35 @@
+
+table{
+    width: 75%;
+    border-collapse: collapse;
+}
+
+table caption{
+    font-size: 2em;
+    font-weight: bold;
+    margin: 1em 0;
+}
+
+th,td{
+    border: 1px solid black;
+    text-align: center;
+    padding: 20px 0;
+}
+
+table thead tr{
+    background-color: slategrey;
+    color: whitesmoke;
+}
+
+table tbody tr:nth-child(odd){
+    background-color: whitesmoke;
+}
+
+table tbody tr:hover{
+    background-color: antiquewhite;
+}
+
+table tbody tr td:first-child{
+    color: black;
+}
+
