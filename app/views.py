@@ -124,14 +124,29 @@ def signup():
     return render_template("signup.html", form=form)
 
 
-@app.route('/income', methods=['GET', 'POST'])
-def priceview():
+@app.route('/price_view', methods=['GET', 'POST'])
+def price_view():
     time_now = datetime.now()
-    date = models.Book.query.filter(models.Book.datetime >= time_now - timedelta(days=7)).all() #search the price_id that during 7 days
-    income = 0
-    for i in date:
+    date_one = models.Book.query.filter(Book.datetime >= time_now - timedelta(days=7)).all()
+    income_one = 0
+    income_two = 0
+    income_three = 0
+    for i in date_one:
         print(i.price_id, i.datetime,)
         print(i.prices.duration, i.prices.cost)
-        income += (i.prices.duration * i.prices.cost)
-    print(income)
-    return str(income)
+        income_one += (i.prices.duration * i.prices.cost)
+    print(income_one)
+    date_two = models.Book.query.filter(Book.datetime >= time_now - timedelta(days=30)).all()
+    for i in date_two:
+        print(i.price_id, i.datetime,)
+        print(i.prices.duration, i.prices.cost)
+        income_two += (i.prices.duration * i.prices.cost)
+    print(income_two)
+    date_three = models.Book.query.filter(Book.datetime >= time_now - timedelta(days=1)).all()
+    for i in date_three:
+        print(i.price_id, i.datetime, )
+        print(i.prices.duration, i.prices.cost)
+        income_three += (i.prices.duration * i.prices.cost)
+    print(income_three)
+    if request.method == 'GET':
+        return render_template("income.html", income_one=income_one, income_two=income_two, income_three=income_three)
