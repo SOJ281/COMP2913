@@ -57,13 +57,25 @@ def add_scooter():
         location = request.form.get('location')
        
         new_scooter = models.Scooters(available = available, location = location)
-        new_locaion = models.Locations()
+        
         db.session.add(new_scooter)
         db.session.commit()
         
         return redirect(url_for("staff"))
         
     return render_template("add_scooter.html",form = form)
+
+@app.route("/config_scooter/<id>", methods=['GET', 'POST'])
+def config_scooter(id):
+    scooter = models.Scooters.query.get(id)
+    form = ScooterForm()
+    if form.validate_on_submit():
+        s = scooter
+        s.available = form.available.data
+        s.location = form.location.data
+        db.session.commit()
+        return redirect('/staff')
+    return render_template("config_scooter.html",form = form,scooter = scooter)
 
 
 @app.route("/booking", methods=['GET', 'POST'])
