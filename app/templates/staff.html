@@ -1,36 +1,42 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Staff</h1>
+    <h1>Staff</h1>
 
-<table>
-    <thread>
+    {% if current_user.is_authenticated %}
+        <p class="nav-item", id="logoutAction">
+            <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
+        </p>
+    {% endif %}
+
+    <table>
+        <thread>
+            <tr>
+                <th>Scooter ID</th>
+                <th>Location</th>
+                <th>Available</th>
+                <th></th>
+            </tr>
+        </thread>
+        <tbody>
+        {% for scooter in Scooters %}
         <tr>
-            <th>Scooter ID</th>
-            <th>Location</th>
-            <th>Available</th>
-            <th></th>
+                <td>{{scooter.id}}</td>   
+                <td>{{scooter.location}}</td>
+                {% if scooter.available == 1 %}
+                <td>Available</td>
+                {% else %}
+                <td>Unavailable</td>
+                {% endif %}
+                <td><a href="/config_scooter/{{scooter.id}}"><button type="button">Configure</button></a></td>           
         </tr>
-    </thread>
-    <tbody>
-    {% for scooter in Scooters %}
-    <tr>
-            <td>{{scooter.id}}</td>   
-            <td>{{scooter.location}}</td>
-            {% if scooter.available == 1 %}
-            <td>Available</td>
-            {% else %}
-            <td>Unavailable</td>
-            {% endif %}
-            <td><a href="/config_scooter/{{scooter.id}}"><button type="button">Configure</button></a></td>           
-    </tr>
-    {% endfor %}
-    <p>weekly income view</p>
-    <button onclick="location.href='/income'">Click Me</button>
-    <p>add scooter</p>
-    <button onclick="location.href='/add_scooter'">Click Me</button>
-    <p id="price_view"></p>
-    </tbody>
-</table>
+        {% endfor %}
+        <p>weekly income view</p>
+        <button onclick="location.href='/price_view'">Click Me</button>
+        <p>add scooter</p>
+        <button onclick="location.href='/add_scooter'">Click Me</button>
+        <p id="price_view"></p>
+        </tbody>
+    </table>
 
 {% endblock %}

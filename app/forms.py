@@ -7,7 +7,7 @@ class LoginForm(FlaskForm):
         email = StringField('Email', validators=[DataRequired
             (message=u"Email cannot be empty"), length(min=5, max=20)])
         password = StringField('Password', validators=[DataRequired
-            (message=u'Password cannot be empty'), length(min=6, max=20)])
+            (message=u'Password cannot be empty'), length(min=1, max=20)])
 
 
 class SignupForm(FlaskForm):
@@ -18,8 +18,8 @@ class SignupForm(FlaskForm):
         email = StringField('Email', validators=[DataRequired
             (message=u'Email cannot be empty'), length(min=5, max=20)])
         password = StringField('Password', validators=[DataRequired
-            (message=u'Password cannot be empty'), length(min=6, max=20)])
-        pw_confirm = StringField('Confirm Password', validators=[EqualTo("password")])
+            (message=u'Password cannot be empty'), length(min=1, max=20)])
+        pw_confirm = StringField('Confirm Password')
 
 class BookingForm(FlaskForm):
         duration = IntegerField('Duration', validators=[DataRequired

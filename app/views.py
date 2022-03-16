@@ -7,11 +7,11 @@ from flask_login import login_user, login_required, current_user, logout_user
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 
-@app.route('/first', methods=['GET', 'POST'])
+@app.route('/first_item', methods=['GET', 'POST'])
 def first():
     return render_template("first_item.html")
 
-@app.route('/second', methods=['GET', 'POST'])
+@app.route('/second_item', methods=['GET', 'POST'])
 def second():
     return render_template("second_item.html")
 
@@ -66,7 +66,6 @@ def add_scooter():
     return render_template("add_scooter.html",form = form)
 
 
-
 @app.route("/booking", methods=['GET', 'POST'])
 @login_required
 def booking():
@@ -75,7 +74,7 @@ def booking():
         duration = request.form.get('duration')
         location = request.form.get('location')
 
-        scooter = models.Scooters.query.filter_by(location=location, available=0).first()
+        scooter = models.Scooters.query.filter_by(location=location, available=1).first()
         price = models.Prices.query.filter_by(duration=duration).first()
 
         #check if scooter at the location is free
@@ -91,7 +90,7 @@ def booking():
             return render_template("booking.html", form=form)
 
         new_booking = models.Book(user_id=current_user.id, scooter_id=scooter.id, price_id=price.id)
-        scooter.available = 1
+        scooter.available = 2
         db.session.add(new_booking)
         db.session.commit()
         flash('Scooter booked successfully!')
@@ -114,8 +113,12 @@ def signup():
             #later try to reset only password fields
             render_template("signup.html", form=form)
         user = models.Users.query.filter_by(email=email).first() # checking if email address already in database
+        userN = models.Users.query.filter_by(username=username).first() # checking of the username is taken
         if user:
             flash("An account with this email address already exists!")
+            return render_template("signup.html", form=form)
+        if userN:
+            flash("This username is already taken!")
             return render_template("signup.html", form=form)
         new_user = models.Users(username=username, age=age, email=email, password=generate_password_hash(password, method='sha256'))
         db.session.add(new_user)
@@ -123,11 +126,17 @@ def signup():
         return redirect(url_for("login"))
     return render_template("signup.html", form=form)
 
+@app.route('/logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+  logout_user()
+  return redirect(url_for('index'))
+
 
 @app.route('/price_view', methods=['GET', 'POST'])
 def price_view():
     time_now = datetime.now()
-    date_one = models.Book.query.filter(Book.datetime >= time_now - timedelta(days=7)).all()
+    date_one = models.Book.query.filter(models.Book.datetime >= time_now - timedelta(days=7)).all()
     income_one = 0
     income_two = 0
     income_three = 0
@@ -136,13 +145,13 @@ def price_view():
         print(i.prices.duration, i.prices.cost)
         income_one += (i.prices.duration * i.prices.cost)
     print(income_one)
-    date_two = models.Book.query.filter(Book.datetime >= time_now - timedelta(days=30)).all()
+    date_two = models.Book.query.filter(models.Book.datetime >= time_now - timedelta(days=30)).all()
     for i in date_two:
         print(i.price_id, i.datetime,)
         print(i.prices.duration, i.prices.cost)
         income_two += (i.prices.duration * i.prices.cost)
     print(income_two)
-    date_three = models.Book.query.filter(Book.datetime >= time_now - timedelta(days=1)).all()
+    date_three = models.Book.query.filter(models.Book.datetime >= time_now - timedelta(days=1)).all()
     for i in date_three:
         print(i.price_id, i.datetime, )
         print(i.prices.duration, i.prices.cost)
