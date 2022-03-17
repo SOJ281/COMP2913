@@ -33,3 +33,9 @@ class ScooterForm(FlaskForm):
             (message=u'Available is required')])
         location = StringField('Location', validators=[DataRequired
             (message=u'Location is required')])
+
+class PriceForm(FlaskForm):
+        
+        cost = IntegerField('Cost', validators=[DataRequired
+            (message=u'Cost is required')])
+        
