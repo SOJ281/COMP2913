@@ -19,6 +19,11 @@ def second():
 def success():
     return render_template("success.html")
 
+@app.route('/card', methods=['GET', 'POST'])
+def card():
+    return render_template("card.html")
+
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template("index.html")
