@@ -1,6 +1,5 @@
 from flask import Flask, request, redirect, url_for, render_template, flash
-
-from .forms import LoginForm, SignupForm, BookingForm,ScooterForm
+from .forms import LoginForm, SignupForm, BookingForm,ScooterForm,PriceForm
 from app import app, models, db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user, logout_user
@@ -46,7 +45,6 @@ def login():
             return redirect(url_for('booking'))
     return render_template("login.html", form=form)
 
-
 @app.route("/staff", methods=['GET', 'POST'])
 def staff():
     scooters = []
@@ -81,6 +79,18 @@ def config_scooter(id):
         db.session.commit()
         return redirect('/staff')
     return render_template("config_scooter.html",form = form,scooter = scooter)
+
+@app.route("/config_price/<id>", methods=['GET', 'POST'])
+def config_price(id):
+    price = models.Prices.query.get(id)
+    form = PriceForm()
+  
+    if form.validate_on_submit():
+        p = price
+        p.cost = form.cost.data
+        db.session.commit()
+        return redirect('/price')
+    return render_template("config_price.html",form = form, price = price)
 
 
 @app.route("/booking", methods=['GET', 'POST'])
@@ -176,3 +186,11 @@ def price_view():
     print(income_three)
     if request.method == 'GET':
         return render_template("income.html", income_one=income_one, income_two=income_two, income_three=income_three)
+
+
+@app.route("/price", methods=['GET', 'POST'])
+def price():
+    prices = []
+    for i in models.Prices.query.all():
+        prices.append(i)
+    return render_template("price.html",Prices = prices)

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Price List</h1>
+
+    {% if current_user.is_authenticated %}
+    <p class="nav-item", id="logoutAction">
+        <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
+    </p>
+    {% endif %}
+    <table>
+        <thread>
+            <tr>
+                <th>Price ID</th>
+                <th>Duration</th>
+                <th>Cost</th>
+                <th></th>
+            </tr>
+        </thread>
+        <tbody>
+        
+        <tr>
+            {% for price in Prices %}
+            <tr>
+                    <td>{{price.id}}</td>
+
+                    {% if price.duration == 1 %}   
+                    <td>1 hour</td>
+                    {% elif price.duration == 4 %}   
+                    <td>4 hour</td>
+                    {% elif price.duration == 24 %}   
+                    <td> 1 day</td>
+                    {% elif price.duration == 168 %}
+                    <td>1 week</td>
+                    {% endif %}
+
+                    
+                    <td>{{price.cost}}£</td>
+                   
+                    <td><a href="/config_price/{{price.id}}"><button type="button">Configure</button></a></td>           
+            </tr>
+            {% endfor %}
+               
+                        
+        </tr>
+        
+
+{% endblock %}
