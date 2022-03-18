@@ -76,6 +76,13 @@ def add_price():
         return redirect(url_for("price"))
     return render_template("add_price.html")
 
+@app.route("/delete_price/<id>", methods=['GET', 'POST'])
+def delete_price(id):
+    price = models.Prices.query.get(id)
+    db.session.delete(price)
+    db.session.commit()
+    return redirect('/price')
+
 @app.route("/config_scooter/<id>", methods=['GET', 'POST'])
 def config_scooter(id):
     scooter = models.Scooters.query.get(id)

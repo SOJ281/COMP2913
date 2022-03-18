@@ -15,6 +15,7 @@
                 <th>Duration</th>
                 <th>Cost</th>
                 <th></th>
+                <th></th>
             </tr>
         </thread>
         <tbody>
@@ -37,7 +38,8 @@
                     
                     <td>{{price.cost}}£</td>
                    
-                    <td><a href="/config_price/{{price.id}}"><button type="button">Configure</button></a></td>           
+                    <td><a href="/config_price/{{price.id}}"><button type="button">Configure</button></a></td>
+                    <td><a href="/delete_price/{{price.id}}"><button type="button">Delete</button></a></td>              
             </tr>
             {% endfor %}
                
