@@ -39,3 +39,9 @@ class PriceForm(FlaskForm):
         cost = IntegerField('Cost', validators=[DataRequired
             (message=u'Cost is required')])
         
+class AddPriceForm(FlaskForm):
+        duration = IntegerField('Duration', validators=[DataRequired
+            (message=u'Duration is required')])      
+        cost = IntegerField('Cost', validators=[DataRequired
+            (message=u'Cost is required')])
+

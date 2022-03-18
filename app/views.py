@@ -1,5 +1,5 @@
 from flask import Flask, request, redirect, url_for, render_template, flash
-from .forms import LoginForm, SignupForm, BookingForm,ScooterForm,PriceForm
+from .forms import LoginForm, SignupForm, BookingForm,ScooterForm,PriceForm,AddPriceForm
 from app import app, models, db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user, logout_user
@@ -57,16 +57,24 @@ def add_scooter():
     form = ScooterForm()
     if form.validate_on_submit():
         available = request.form.get('available')
-        location = request.form.get('location')
-       
-        new_scooter = models.Scooters(available = available, location = location)
-        
+        location = request.form.get('location')  
+        new_scooter = models.Scooters(available = available, location = location)    
         db.session.add(new_scooter)
-        db.session.commit()
-        
-        return redirect(url_for("staff"))
-        
+        db.session.commit()      
+        return redirect(url_for("staff"))       
     return render_template("add_scooter.html",form = form)
+
+@app.route("/add_price", methods=['GET', 'POST'])
+def add_price():
+    form = AddPriceForm()
+    if form.validate_on_submit():
+        duration = request.form.get('duration')
+        cost = request.form.get('cost')
+        new_price = models.Prices(duration = duration, cost = cost)   
+        db.session.add(new_price)
+        db.session.commit()
+        return redirect(url_for("price"))
+    return render_template("add_price.html")
 
 @app.route("/config_scooter/<id>", methods=['GET', 'POST'])
 def config_scooter(id):
