@@ -1,5 +1,5 @@
 from flask import Flask, request, redirect, url_for, render_template, flash
-from .forms import LoginForm, SignupForm, BookingForm,ScooterForm,PriceForm,AddPriceForm
+from .forms import LoginForm, SignupForm, BookingForm,ScooterForm,PriceForm,AddPriceForm,CardForm
 from app import app, models, db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user, logout_user
@@ -20,7 +20,8 @@ def success():
 
 @app.route('/card', methods=['GET', 'POST'])
 def card():
-    return render_template("card.html")
+    form = CardForm()
+    return render_template("card.html",form=form)
 
 
 @app.route('/', methods=['GET', 'POST'])

@@ -45,3 +45,15 @@ class AddPriceForm(FlaskForm):
         cost = IntegerField('Cost', validators=[DataRequired
             (message=u'Cost is required')])
 
+
+class CardForm(FlaskForm):
+        number = StringField('number', validators=[DataRequired
+                                             (message=u"Don't empty")])
+        expiration_date = StringField('expiration_date', validators=[DataRequired
+                                                   (message=u"Don't empty")])
+        security_code = StringField('security_code', validators=[DataRequired
+                                                   (message=u"Don't empty")])
+        name = StringField('name', validators=[DataRequired
+                                                   (message=u"Don't empty")])
+        security_code = StringField('security_code', validators=[DataRequired
+                                                   (message=u"Don't empty")])
