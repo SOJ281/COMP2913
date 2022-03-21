@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField
+from wtforms import StringField, IntegerField, BooleanField
 from wtforms.validators import DataRequired, length,EqualTo
 
 
@@ -35,25 +35,24 @@ class ScooterForm(FlaskForm):
             (message=u'Location is required')])
 
 class PriceForm(FlaskForm):
-        
+
         cost = IntegerField('Cost', validators=[DataRequired
             (message=u'Cost is required')])
-        
+
 class AddPriceForm(FlaskForm):
         duration = IntegerField('Duration', validators=[DataRequired
-            (message=u'Duration is required')])      
+            (message=u'Duration is required')])
         cost = IntegerField('Cost', validators=[DataRequired
             (message=u'Cost is required')])
 
 
 class CardForm(FlaskForm):
         number = StringField('number', validators=[DataRequired
-                                             (message=u"Don't empty")])
+                                             (message=u"Card Number required")])
         expiration_date = StringField('expiration_date', validators=[DataRequired
-                                                   (message=u"Don't empty")])
-        security_code = StringField('security_code', validators=[DataRequired
-                                                   (message=u"Don't empty")])
+                                                   (message=u"Expiration date required")])
+        security_code = IntegerField('security_code', validators=[DataRequired
+                                                   (message=u"CVV / CVC required")])
         name = StringField('name', validators=[DataRequired
-                                                   (message=u"Don't empty")])
-        security_code = StringField('security_code', validators=[DataRequired
-                                                   (message=u"Don't empty")])
+                                                   (message=u"Name on Card required")])
+        save = BooleanField('security_code')
