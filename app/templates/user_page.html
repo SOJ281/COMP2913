@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form>      
+    <h1>
+        <a href="profile.html" target="_blank">User name</a>
+    </h1>
+    <table border="1" width="500px" height="500px">
+        <tr>
+            <td>
+                <h1>
+                available scooters
+                </h1>
+            <div id="content">
+                <form action="booking page" method="get">
+                    <label for="pick-up location">Pick-up location</label>
+                    <select id="plocation" name="plocation">
+                        <option value="Trinity centre">Trinity centre</option>
+                        <option value="Train Station">Train Station</option>
+                        <option value="Merrion centre">Merrion centre</option>
+                        <option value="LRI hospital">LRI hospital</option>
+                        <option value="UoL Edge sports centre">UoL Edge sports centre</option>
+                    </select>
+                    
+                    <label for="duration">duration</label>
+                    <select id="duration" name="duration">
+                        <option value="1 hour">1 hour</option>
+                        <option value="4 hours">4 hours</option>
+                        <option value="1 day">1 day</option>
+                        <option value="1 week">1 week</option>
+                    </select>
+                    
+                    <button width="100px"height="20px" backgroud-color="white">
+                        BOOK NOW
+                    </button>
+                </form>
+            </div>
+            </td>
+        <tr>
+       
+        <td>
+            <input type="button" value="VIEW MY ORDER" width="200px" height="50px">
+        
+        </td>
+        </tr>
+    
+        
+    </table>
+
+</form>
+{% endblock %}
