@@ -18,12 +18,6 @@ def second():
 def success():
     return render_template("success.html")
 
-@app.route('/card', methods=['GET', 'POST'])
-def card():
-    form = CardForm()
-    return render_template("card.html",form=form)
-
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template("index.html")
@@ -58,11 +52,11 @@ def add_scooter():
     form = ScooterForm()
     if form.validate_on_submit():
         available = request.form.get('available')
-        location = request.form.get('location')  
-        new_scooter = models.Scooters(available = available, location = location)    
+        location = request.form.get('location')
+        new_scooter = models.Scooters(available = available, location = location)
         db.session.add(new_scooter)
-        db.session.commit()      
-        return redirect(url_for("staff"))       
+        db.session.commit()
+        return redirect(url_for("staff"))
     return render_template("add_scooter.html",form = form)
 
 @app.route("/add_price", methods=['GET', 'POST'])
@@ -71,7 +65,7 @@ def add_price():
     if form.validate_on_submit():
         duration = request.form.get('duration')
         cost = request.form.get('cost')
-        new_price = models.Prices(duration = duration, cost = cost)   
+        new_price = models.Prices(duration = duration, cost = cost)
         db.session.add(new_price)
         db.session.commit()
         return redirect(url_for("price"))
@@ -100,7 +94,7 @@ def config_scooter(id):
 def config_price(id):
     price = models.Prices.query.get(id)
     form = PriceForm()
-  
+
     if form.validate_on_submit():
         p = price
         p.cost = form.cost.data
@@ -125,20 +119,59 @@ def booking():
             flash('No scooter available at location!')
             return render_template("booking.html", form=form)
 
-        #check if card payment successfully
-        #changes after implementing card payments
-        paid_successfully = False
-        if not paid_successfully:
-            flash('Payment Unsuccessful!')
-            return render_template("booking.html", form=form)
+        return redirect(url_for('card', location=location, duration=duration))
 
-        new_booking = models.Book(user_id=current_user.id, scooter_id=scooter.id, price_id=price.id)
+    return render_template("booking.html", form=form)
+
+@app.route('/card', methods=['GET', 'POST'])
+@login_required
+def card():
+    form = CardForm()
+    if form.validate_on_submit():
+        number_string = request.form.get('number')
+        expiration_date_string = request.form.get('expiration_date')
+        security_code = int(request.form.get('security_code'))
+        name = request.form.get('name')
+        location = request.args.get('location')
+        duration = request.args.get('duration')
+
+        scooter = models.Scooters.query.filter_by(location=location, available=1).first()
+        price = models.Prices.query.filter_by(duration=duration).first()
+
+        # Validate card number
+        try:
+            if len(number_string) != 16:
+                raise ValueError
+            number = int(number_string)
+        except ValueError:
+            flash("Invalid Card Number")
+            return render_template("card.html",form=form)
+
+        # Validate expiration date
+        try:
+            parts = expiration_date_string.split("/")
+            if len(parts) != 2:
+                raise ValueError
+            month = int(parts[0])
+            year = int(parts[1])
+            if month not in range(datetime.now().month, 13) or year < 22:
+                raise ValueError
+        except ValueError:
+            flash("Invalid Expiration Date")
+            return render_template("card.html",form=form)
+
+        # Validate security code
+        if security_code not in range(100, 1000):
+            flash("Invalid Security Code")
+            return render_template("card.html",form=form)
+
+        new_booking = models.Book(user_id=current_user.id, scooter_id=scooter.id, price_id=price.id, datetime=datetime.now(), completed=0)
         scooter.available = 2
         db.session.add(new_booking)
         db.session.commit()
         flash('Scooter booked successfully!')
-    return render_template("booking.html", form=form)
 
+    return render_template("card.html",form=form)
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
