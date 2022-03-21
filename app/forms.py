@@ -5,9 +5,9 @@ from wtforms.validators import DataRequired, length,EqualTo
 
 class LoginForm(FlaskForm):
         email = StringField('Email', validators=[DataRequired
-            (message=u"Email cannot be empty"), length(min=5, max=20)])
+            (message=u"Email cannot be empty"), length(min=5, max=50)])
         password = StringField('Password', validators=[DataRequired
-            (message=u'Password cannot be empty'), length(min=1, max=20)])
+            (message=u'Password cannot be empty'), length(min=1, max=50)])
 
 
 class SignupForm(FlaskForm):
@@ -16,9 +16,9 @@ class SignupForm(FlaskForm):
         age = IntegerField('Age', validators=[DataRequired
             (message=u'Age cannot be empty')])
         email = StringField('Email', validators=[DataRequired
-            (message=u'Email cannot be empty'), length(min=5, max=20)])
+            (message=u'Email cannot be empty'), length(min=5, max=50)])
         password = StringField('Password', validators=[DataRequired
-            (message=u'Password cannot be empty'), length(min=1, max=20)])
+            (message=u'Password cannot be empty'), length(min=1, max=50)])
         pw_confirm = StringField('Confirm Password')
 
 class BookingForm(FlaskForm):

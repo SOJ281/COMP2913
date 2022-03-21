@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user, logout_user
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
+from .scooteremail import sendConfirmationMessage
 
 @app.route('/first_item', methods=['GET', 'POST'])
 def first():
@@ -133,10 +134,12 @@ def card():
         security_code = int(request.form.get('security_code'))
         name = request.form.get('name')
         location = request.args.get('location')
-        duration = request.args.get('duration')
+        duration = int(request.args.get('duration'))
 
         scooter = models.Scooters.query.filter_by(location=location, available=1).first()
         price = models.Prices.query.filter_by(duration=duration).first()
+
+        curdatetime = datetime.now()
 
         # Validate card number
         try:
@@ -154,7 +157,9 @@ def card():
                 raise ValueError
             month = int(parts[0])
             year = int(parts[1])
-            if month not in range(datetime.now().month, 13) or year < 22:
+            if month not in range(1, 13) or year not in range(22, 100):
+                raise ValueError
+            if year == (curdatetime.year % 1000) and month < curdatetime.month:
                 raise ValueError
         except ValueError:
             flash("Invalid Expiration Date")
@@ -165,11 +170,18 @@ def card():
             flash("Invalid Security Code")
             return render_template("card.html",form=form)
 
-        new_booking = models.Book(user_id=current_user.id, scooter_id=scooter.id, price_id=price.id, datetime=datetime.now(), completed=0)
+        new_booking = models.Book(user_id=current_user.id, scooter_id=scooter.id, price_id=price.id, datetime=curdatetime, completed=0)
         scooter.available = 2
         db.session.add(new_booking)
         db.session.commit()
-        flash('Scooter booked successfully!')
+
+        durations = {1: "1 hour",
+                     4: "4 hours",
+                     24: "1 day",
+                     168: "1 week"}
+
+        sendConfirmationMessage(current_user.username, current_user.email, scooter.id, location, (str(curdatetime.hour)+":"+str(curdatetime.minute)), curdatetime.date(), durations.get(duration))
+        flash('Scooter booked successfully! Please check your email for the Booking Confirmation')
 
     return render_template("card.html",form=form)
 
