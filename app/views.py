@@ -7,17 +7,13 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from .scooteremail import sendConfirmationMessage
 
-@app.route('/first_item', methods=['GET', 'POST'])
-def first():
-    return render_template("first_item.html")
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    return render_template("profile.html")
 
-@app.route('/second_item', methods=['GET', 'POST'])
-def second():
-    return render_template("second_item.html")
-
-@app.route('/success', methods=['GET', 'POST'])
+@app.route('/user_page', methods=['GET', 'POST'])
 def success():
-    return render_template("success.html")
+    return render_template("user_page.html")
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
