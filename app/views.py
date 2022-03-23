@@ -9,11 +9,15 @@ from .scooteremail import sendConfirmationMessage
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
-    return render_template("profile.html")
+    bookings = []
+    for i in models.Book.query.all():
+        if (i.user_id == current_user.id):
+            bookings.append(i)
+            price = models.Prices.query.get(i.price_id)
+            scooter = models.Scooters.query.get(i.scooter_id)
+    return render_template("profile.html", name=current_user.username, Bookings=bookings, price=price, scooter=scooter)
 
-@app.route('/user_page', methods=['GET', 'POST'])
-def success():
-    return render_template("user_page.html")
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():

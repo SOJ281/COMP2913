@@ -2,32 +2,48 @@
 
 {% block content %}
 
-        <h1>your account</h1>
-        <table border="1" width="500px" height="500px">
+        <h1>
+            Profile
+        </h1>
+        <h2>
+            Welcome {{name}}!
+        </h2>
+        {% if current_user.is_authenticated %}
+        <p class="nav-item", id="logoutAction">
+            <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
+        </p>
+        {% endif %}
+        <table >
+            <h3>Your bookings</h3>
+            <thread>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Location</th>
+                    <th>Duration</th>
+                    <th>Price</th>
+                    <th>Date</th>
+                </tr>
+            </thread>
+            <tbody>
+            {% for booking in Bookings %}
             <tr>
-                <td>
-                    first name:
-                </td>
+                    <td>{{booking.id}}</td>   
+                    <td>{{scooter.location}}</td>
+                    <td>
+                        {% if price.duration == 1 %}
+                        1 hour
+                        {% elif price.duration == 4 %}
+                        4 hour
+                        {% elif price.duration == 24 %}
+                        1 day
+                        {% elif price.duration == 168 %}
+                        1 week
+                        {% endif %} 
+                    </td>
+                    <td>{{price.cost}}</td> 
+                    <td>{{booking.datetime}}</td> 
+                    <td><button type="button">Cancel</button></a></td>
             </tr>
-			<tr>
-                <td>
-                    last name:
-                </td>
-            </tr>
-			<tr>
-                <td>
-                    phone number:
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    e-mail:
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    password:
-                </td>
-            </tr>		
+            {% endfor %}
         </table>
 {% endblock %}
