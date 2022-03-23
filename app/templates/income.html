@@ -1,41 +1,70 @@
 {% extends "base.html" %}
 {% block content %}
-    <head><link href="/static/table.css" rel="stylesheet" type="text/css"></head>
-<body>
-<table>
+    <head><link href="/static/table.css" rel="stylesheet" type="text/css">
+    </head>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="notification is-danger">
+            {{ messages[0] }}.</a>.
+        </div>
+    {% endif %}
+    {% endwith %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>genChart('{{income_DateAr}}', '{{income_Ar}}', '{{final_date}}')</script>
+<table onmouseover="genChart('{{income_DateAr}}', '{{income_Ar}}', '{{final_date}}')">
     <caption>Scooter income report</caption>
     <thead>
         <tr>
-            <th>Datetime</th>
+            <th>Data</th>
             <th>income</th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td>
-                Daily
+                Total
             </td>
             <td>
-                {{income_three}}
+                {{total_income}}
             </td>
         </tr>
-        <tr>
-            <td>
-                weekly
-            </td>
-            <td>
-               {{income_one}}
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Monthly
-            </td>
-            <td>
-                {{income_two}}
-            </td>
         </tr>
     </tbody>
     </table>
-</body>
+    <canvas id="myChart" style="width:80%;height:400px;"></canvas>
+    <form action="/price_view" method=POST name="date" onmouseover="genChart('{{income_DateAr}}', '{{income_Ar}}', '{{final_date}}')">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        {{ form.csrf }}
+        <select id="viewType" name="viewType" onchange = "changeView()" >
+            <option value="Weekly">Weekly</option>
+            <option value="Monthly">Monthly</option>
+            <option value="Yearly">Year</option>
+          </select>
+        <table>
+            <tr id = "dayC">
+                <td>day:
+                </td>
+                <td>
+                    <input id = "day" type="day" name="day">
+                </td>
+            </tr>
+            <tr id = "monthC">
+                <td>month:
+                </td>
+                <td>
+                    <input id = "month" type="month" name="month">
+                </td>
+            </tr>
+            <tr id = "yearC">
+                <td>year:</td>
+                <td><input id = "year" type="year" name="year"></td>
+            </tr>
+            <tr>
+                <td>
+                <button>submit</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <script></script>
 {% endblock %}

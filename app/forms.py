@@ -56,3 +56,13 @@ class CardForm(FlaskForm):
         name = StringField('name', validators=[DataRequired
                                                    (message=u"Name on Card required")])
         save = BooleanField('security_code')
+
+class monthInputForm(FlaskForm):
+        viewType = StringField('viewType', validators=[DataRequired
+            (message=u'Invalid viewType')])
+        day = IntegerField('day', validators=[DataRequired
+            (message=u'Invalid day')])
+        month = IntegerField('month', validators=[DataRequired
+            (message=u'Invalid month')])
+        year = IntegerField('year', validators=[DataRequired
+            (message=u'Invalid year')])

@@ -1,5 +1,5 @@
 from flask import Flask, request, redirect, url_for, render_template, flash
-from .forms import LoginForm, SignupForm, BookingForm,ScooterForm,PriceForm,AddPriceForm,CardForm
+from .forms import LoginForm, SignupForm, BookingForm,ScooterForm,PriceForm,AddPriceForm,CardForm, monthInputForm
 from app import app, models, db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user, logout_user
@@ -223,30 +223,68 @@ def logout():
 
 @app.route('/price_view', methods=['GET', 'POST'])
 def price_view():
+    form = monthInputForm()
     time_now = datetime.now()
-    date_one = models.Book.query.filter(models.Book.datetime >= time_now - timedelta(days=7)).all()
-    income_one = 0
-    income_two = 0
-    income_three = 0
-    for i in date_one:
-        print(i.price_id, i.datetime,)
-        print(i.prices.duration, i.prices.cost)
-        income_one += (i.prices.duration * i.prices.cost)
-    print(income_one)
-    date_two = models.Book.query.filter(models.Book.datetime >= time_now - timedelta(days=30)).all()
-    for i in date_two:
-        print(i.price_id, i.datetime,)
-        print(i.prices.duration, i.prices.cost)
-        income_two += (i.prices.duration * i.prices.cost)
-    print(income_two)
-    date_three = models.Book.query.filter(models.Book.datetime >= time_now - timedelta(days=1)).all()
-    for i in date_three:
-        print(i.price_id, i.datetime, )
-        print(i.prices.duration, i.prices.cost)
-        income_three += (i.prices.duration * i.prices.cost)
-    print(income_three)
-    if request.method == 'GET':
-        return render_template("income.html", income_one=income_one, income_two=income_two, income_three=income_three)
+
+    total_income = 0
+    final_date = ""
+
+    income_Ar = []
+    income_DateAr = []
+
+    #Determines graph data and returns for days and total
+    if form.validate_on_submit(): 
+        viewType = request.form.get('viewType')
+        day = int(request.form.get('day'))
+        month = int(request.form.get('month'))
+        year = int(request.form.get('year'))
+
+        if (viewType == "Weekly"): #If weekly view
+            myDate = datetime(year, month, day)
+            final_date = "Week of "+myDate.strftime("%x")
+            while(not myDate.strftime("%w") == "0"):
+                myDate = myDate - timedelta(days=1)
+            for l in range(0, 7):
+                myDate = myDate + timedelta(days=1)
+                date_results = models.Book.query.filter((models.Book.datetime <= myDate) & (models.Book.datetime >=  myDate - timedelta(days=1))).all()
+                temp_val = 0
+                for i in date_results:
+                    temp_val = (i.prices.duration * i.prices.cost)
+                    total_income += temp_val
+                import calendar
+                income_DateAr.append(l+1) 
+                income_Ar.append(temp_val) 
+
+        if (viewType == "Monthly"): #If monthly view
+            from calendar import monthrange
+            length = monthrange(2019, 2)[1]
+            final_date = "Month of "+datetime(year, month, 1).strftime("%d") + "/" + datetime(year, month, 1).strftime("%Y")
+            for l in reversed(range(1, length)):
+                myDate = datetime(year, month, length - l)
+                date_results = models.Book.query.filter((models.Book.datetime <= myDate) & (models.Book.datetime >=  myDate - timedelta(days=1))).all()
+                temp_val = 0
+                for i in date_results:
+                    temp_val = (i.prices.duration * i.prices.cost)
+                    total_income += (i.prices.duration * i.prices.cost)
+                income_DateAr.append(length - l) 
+                income_Ar.append(temp_val) 
+
+        if (viewType == "Yearly"): #If Yearly view
+            myDatec = datetime(year-1, 12,  1)
+            final_date = "Year of "+ datetime(year, month, 1).strftime("%Y")
+            for l in range(1, 13):
+                myDate = datetime(year, l,  1)
+                date_results = models.Book.query.filter((models.Book.datetime <= myDate) & (models.Book.datetime >= myDatec)).all()
+                temp_val = 0
+                for i in date_results:
+                    temp_val = (i.prices.duration * i.prices.cost)
+                    total_income += (i.prices.duration * i.prices.cost)
+                income_DateAr.append(l) 
+                income_Ar.append(temp_val) 
+                myDatec = datetime(year, l,  1)
+
+
+    return render_template("income.html", final_date=final_date, total_income=total_income, income_Ar=income_Ar, income_DateAr=income_DateAr, form=form)
 
 
 @app.route("/price", methods=['GET', 'POST'])
