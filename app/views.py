@@ -81,15 +81,18 @@ def delete_price(id):
 
 @app.route("/config_scooter/<id>", methods=['GET', 'POST'])
 def config_scooter(id):
-    scooter = models.Scooters.query.get(id)
+    s = models.Scooters.query.get(id)
     form = ScooterForm()
     if form.validate_on_submit():
-        s = scooter
-        s.available = form.available.data
+        new_availability = form.available.data
+        if s.available == 2 and new_availability == 1:
+            booking = models.Book.query.filter_by(scooter_id=id).first()
+            booking.completed = 1
+        s.available = new_availability
         s.location = form.location.data
         db.session.commit()
         return redirect('/staff')
-    return render_template("config_scooter.html",form = form,scooter = scooter)
+    return render_template("config_scooter.html",form = form,scooter = s)
 
 @app.route("/config_price/<id>", methods=['GET', 'POST'])
 def config_price(id):
@@ -109,19 +112,23 @@ def config_price(id):
 def booking():
     form = BookingForm()
     if form.validate_on_submit():
-        duration = request.form.get('duration')
+        duration = int(request.form.get('duration'))
         location = request.form.get('location')
 
         scooter = models.Scooters.query.filter_by(location=location, available=1).first()
         price = models.Prices.query.filter_by(duration=duration).first()
+        curdatetime = datetime.now()
 
         #check if scooter at the location is free
         if scooter is None:
             flash('No scooter available at location!')
             return render_template("booking.html", form=form)
 
-        return redirect(url_for('card', location=location, duration=duration))
-
+        new_booking = models.Book(user_id=current_user.id, scooter_id=scooter.id, price_id=price.id, datetime=curdatetime, completed=0)
+        scooter.available = 2
+        db.session.add(new_booking)
+        db.session.commit()
+        return redirect(url_for('card'))
     return render_template("booking.html", form=form)
 
 @app.route('/card', methods=['GET', 'POST'])
@@ -133,13 +140,9 @@ def card():
         expiration_date_string = request.form.get('expiration_date')
         security_code = int(request.form.get('security_code'))
         name = request.form.get('name')
-        location = request.args.get('location')
-        duration = int(request.args.get('duration'))
-
-        scooter = models.Scooters.query.filter_by(location=location, available=1).first()
-        price = models.Prices.query.filter_by(duration=duration).first()
 
         curdatetime = datetime.now()
+        success = True
 
         # Validate card number
         try:
@@ -147,8 +150,7 @@ def card():
                 raise ValueError
             number = int(number_string)
         except ValueError:
-            flash("Invalid Card Number")
-            return render_template("card.html",form=form)
+            success = False
 
         # Validate expiration date
         try:
@@ -162,26 +164,31 @@ def card():
             if year == (curdatetime.year % 1000) and month < curdatetime.month:
                 raise ValueError
         except ValueError:
-            flash("Invalid Expiration Date")
-            return render_template("card.html",form=form)
+            success = False
 
         # Validate security code
         if security_code not in range(100, 1000):
-            flash("Invalid Security Code")
-            return render_template("card.html",form=form)
+            success = False
 
-        new_booking = models.Book(user_id=current_user.id, scooter_id=scooter.id, price_id=price.id, datetime=curdatetime, completed=0)
-        scooter.available = 2
-        db.session.add(new_booking)
-        db.session.commit()
+        new_booking = models.Book.query.filter_by(user_id=current_user.id).order_by(models.Book.id.desc()).first()
+        scooter = new_booking.scooters
+        price = new_booking.prices
 
+        if not success:
+            db.session.delete(new_booking)
+            scooter.available = 1
+            db.session.commit()
+            flash("Payment Unsuccesful, plase check card details")
+            return redirect(url_for('booking'))
+            
         durations = {1: "1 hour",
                      4: "4 hours",
                      24: "1 day",
                      168: "1 week"}
 
-        sendConfirmationMessage(current_user.username, current_user.email, scooter.id, location, (str(curdatetime.hour)+":"+str(curdatetime.minute)), curdatetime.date(), durations.get(duration))
+        sendConfirmationMessage(current_user.username, current_user.email, scooter.id, scooter.location, (str(curdatetime.hour)+":"+str(curdatetime.minute)), curdatetime.date(), durations.get(price.duration))
         flash('Scooter booked successfully! Please check your email for the Booking Confirmation')
+        return redirect(url_for("profile"))
 
     return render_template("card.html",form=form)
 
@@ -233,7 +240,7 @@ def price_view():
     income_DateAr = []
 
     #Determines graph data and returns for days and total
-    if form.validate_on_submit(): 
+    if form.validate_on_submit():
         viewType = request.form.get('viewType')
         day = int(request.form.get('day'))
         month = int(request.form.get('month'))
@@ -252,8 +259,8 @@ def price_view():
                     temp_val = (i.prices.duration * i.prices.cost)
                     total_income += temp_val
                 import calendar
-                income_DateAr.append(l+1) 
-                income_Ar.append(temp_val) 
+                income_DateAr.append(l+1)
+                income_Ar.append(temp_val)
 
         if (viewType == "Monthly"): #If monthly view
             from calendar import monthrange
@@ -266,8 +273,8 @@ def price_view():
                 for i in date_results:
                     temp_val = (i.prices.duration * i.prices.cost)
                     total_income += (i.prices.duration * i.prices.cost)
-                income_DateAr.append(length - l) 
-                income_Ar.append(temp_val) 
+                income_DateAr.append(length - l)
+                income_Ar.append(temp_val)
 
         if (viewType == "Yearly"): #If Yearly view
             myDatec = datetime(year-1, 12,  1)
@@ -279,8 +286,8 @@ def price_view():
                 for i in date_results:
                     temp_val = (i.prices.duration * i.prices.cost)
                     total_income += (i.prices.duration * i.prices.cost)
-                income_DateAr.append(l) 
-                income_Ar.append(temp_val) 
+                income_DateAr.append(l)
+                income_Ar.append(temp_val)
                 myDatec = datetime(year, l,  1)
 
 
