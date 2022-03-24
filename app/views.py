@@ -87,7 +87,8 @@ def config_scooter(id):
         new_availability = form.available.data
         if s.available == 2 and new_availability == 1:
             booking = models.Book.query.filter_by(scooter_id=id).first()
-            booking.completed = 1
+            if booking is not None:
+                booking.completed = 1
         s.available = new_availability
         s.location = form.location.data
         db.session.commit()
@@ -180,7 +181,7 @@ def card():
             db.session.commit()
             flash("Payment Unsuccesful, plase check card details")
             return redirect(url_for('booking'))
-            
+
         durations = {1: "1 hour",
                      4: "4 hours",
                      24: "1 day",
