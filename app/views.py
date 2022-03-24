@@ -10,14 +10,14 @@ from .scooteremail import sendConfirmationMessage
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     bookings = []
+    prices = []
+    scooters = []
     for i in models.Book.query.all():
         if (i.user_id == current_user.id):
             bookings.append(i)
-            price = models.Prices.query.get(i.price_id)
-            scooter = models.Scooters.query.get(i.scooter_id)
-    return render_template("profile.html", name=current_user.username, Bookings=bookings, price=price, scooter=scooter)
-
-
+            prices.append(models.Prices.query.get(i.price_id))
+            scooters.append(models.Scooters.query.get(i.scooter_id))
+    return render_template("profile.html", name=current_user.username, Bookings=bookings, Prices=prices, Scooters=scooters)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -190,8 +190,23 @@ def card():
         sendConfirmationMessage(current_user.username, current_user.email, scooter.id, scooter.location, (str(curdatetime.hour)+":"+str(curdatetime.minute)), curdatetime.date(), durations.get(price.duration))
         flash('Scooter booked successfully! Please check your email for the Booking Confirmation')
         return redirect(url_for("profile"))
-
     return render_template("card.html",form=form)
+
+@app.route("/cancel_booking/<id>", methods=['GET', 'POST'])
+def cancel_booking(id):
+    time = datetime.now()
+    booking = models.Book.query.get(id)
+
+    diff = time - booking.datetime
+    if diff.seconds < 900:
+        scooter = booking.scooters
+        scooter.available = 1
+        db.session.delete(booking)
+        db.session.commit()
+        flash("Booking cancelled successfully")
+    else:
+        flash("Failed to cancel booking. You can only cancel within 15 minutes of booking")
+    return redirect('/profile')
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
