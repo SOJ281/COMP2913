@@ -184,3 +184,23 @@
         color: black;
     }
 
+    .stars{
+        width: 50%;
+        list-style: none;
+        margin: 0;
+        line-height: 67px;
+        color: rgb(0, 0, 0);
+        margin-left: 30px;
+        float: left;
+    }
+    .stars span{
+        font-size: 30px;
+        margin-left: 10px;
+    }
+    .stars span:after{
+        content: '☆';
+    }
+    .stars .show:after,.stars .show2:after{
+        content: '★';
+    }
+

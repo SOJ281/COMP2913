@@ -23,6 +23,10 @@ def profile():
 def index():
     return render_template("index.html")
 
+@app.route('/feedback', methods=['GET', 'POST'])
+def feedback():
+    return render_template("feedback.html")
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -129,7 +133,7 @@ def booking():
         #check if scooter at the location is free
         if scooter is None:
             flash('No scooter available at location!')
-            return render_template("booking.html", form=form)
+            return render_template("booking.html", form=form, Prices=prices_dict)
 
         new_booking = models.Book(user_id=current_user.id, scooter_id=scooter.id, price_id=price.id, datetime=curdatetime, completed=0)
         scooter.available = 2
