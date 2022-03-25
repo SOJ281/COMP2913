@@ -112,6 +112,12 @@ def config_price(id):
 @login_required
 def booking():
     form = BookingForm()
+
+    prices_dict = {}
+    prices = models.Prices.query.all()
+    for p in prices:
+        prices_dict[p.duration] = p.cost
+
     if form.validate_on_submit():
         duration = int(request.form.get('duration'))
         location = request.form.get('location')
@@ -130,12 +136,17 @@ def booking():
         db.session.add(new_booking)
         db.session.commit()
         return redirect(url_for('card'))
-    return render_template("booking.html", form=form)
+    return render_template("booking.html", form=form, Prices=prices_dict)
 
 @app.route('/card', methods=['GET', 'POST'])
 @login_required
 def card():
     form = CardForm()
+
+    new_booking = models.Book.query.filter_by(user_id=current_user.id).order_by(models.Book.id.desc()).first()
+    scooter = new_booking.scooters
+    price = new_booking.prices
+
     if form.validate_on_submit():
         number_string = request.form.get('number')
         expiration_date_string = request.form.get('expiration_date')
@@ -171,10 +182,6 @@ def card():
         if security_code not in range(100, 1000):
             success = False
 
-        new_booking = models.Book.query.filter_by(user_id=current_user.id).order_by(models.Book.id.desc()).first()
-        scooter = new_booking.scooters
-        price = new_booking.prices
-
         if not success:
             db.session.delete(new_booking)
             scooter.available = 1
@@ -190,7 +197,7 @@ def card():
         sendConfirmationMessage(current_user.username, current_user.email, scooter.id, scooter.location, (str(curdatetime.hour)+":"+str(curdatetime.minute)), curdatetime.date(), durations.get(price.duration))
         flash('Scooter booked successfully! Please check your email for the Booking Confirmation')
         return redirect(url_for("profile"))
-    return render_template("card.html",form=form)
+    return render_template("card.html",form=form, Price=price.cost)
 
 @app.route("/cancel_booking/<id>", methods=['GET', 'POST'])
 def cancel_booking(id):
