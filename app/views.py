@@ -112,6 +112,16 @@ def config_price(id):
 @login_required
 def booking():
     form = BookingForm()
+    cost = []
+    duration = []
+    #cost.append(models.Prices.query.get(i.price_id))
+    for i in models.Prices.query.all():
+        cost.append(i.cost)
+        duration.append(i.duration)
+        print(i.cost)
+        print(i.duration)
+        #if (1 == i.duration):
+
     if form.validate_on_submit():
         duration = int(request.form.get('duration'))
         location = request.form.get('location')
@@ -130,7 +140,7 @@ def booking():
         db.session.add(new_booking)
         db.session.commit()
         return redirect(url_for('card'))
-    return render_template("booking.html", form=form)
+    return render_template("booking.html", form=form, cost=cost, duration=duration)
 
 @app.route('/card', methods=['GET', 'POST'])
 @login_required
@@ -293,21 +303,26 @@ def price_view():
                 income_Ar.append(temp_val)
 
         if (viewType == "Yearly"): #If Yearly view
-            myDatec = datetime(year-1, 12,  1)
-            final_date = "Year of "+ datetime(year, month, 1).strftime("%Y")
-            for l in range(1, 13):
-                myDate = datetime(year, l,  1)
-                date_results = models.Book.query.filter((models.Book.datetime <= myDate) & (models.Book.datetime >= myDatec)).all()
+            myDatec = datetime(year, 1,  1)
+            final_date = "Year of "+ datetime(year, 1, 1).strftime("%Y")
+            for l in range(0, 12):
+                if l == 11:
+                    myDate = datetime(year + 1, 1 + l%11,  1)
+                else:
+                    myDate = datetime(year, 2 + l%11,  1)
+                    
+                myDateLower = datetime(year, 1  + l,  1)
+                date_results = models.Book.query.filter((models.Book.datetime <= myDate) & (models.Book.datetime >= myDateLower)).all()
                 temp_val = 0
                 for i in date_results:
                     temp_val = (i.prices.duration * i.prices.cost)
                     total_income += (i.prices.duration * i.prices.cost)
-                income_DateAr.append(l)
+                income_DateAr.append(1  + l)
                 income_Ar.append(temp_val)
-                myDatec = datetime(year, l,  1)
 
 
     return render_template("income.html", final_date=final_date, total_income=total_income, income_Ar=income_Ar, income_DateAr=income_DateAr, form=form)
+
 
 
 @app.route("/price", methods=['GET', 'POST'])

@@ -2,14 +2,6 @@
 
 {% block content %}
     <h1>Booking Page</h1>
-    {% if current_user.is_authenticated %}
-    <p class="nav-item", id="logoutAction">
-        <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
-    </p>
-    <p class="nav-item", id="profileAction">
-      <a class="nav-link" href="{{url_for('profile')}}">Profile</a>
-    </p>
-    {% endif %}
     {% with messages = get_flashed_messages() %}
     {% if messages %}
         <div class="notification is-danger">
@@ -38,13 +30,16 @@
 
         <br>
 
-        <label for="duration">Duration</label>
-        <select id="duration" name="duration">
+        <label for="duration">Duration </label>
+        <select id="duration" name="duration" onchange = "showCost('{{duration}}', '{{cost}}')">
           <option value=1>1 hour</option>
           <option value=4>4 hours</option>
           <option value=24>1 day</option>
           <option value=168>1 week</option>
         </select>
+
+        <label for="cost">Cost</label>
+        <p id = "costed"></p>
 
         <br>
 

@@ -10,27 +10,33 @@
     {% endif %}
     {% endwith %}
     <br>
-    <form action="/login" method=POST name="login">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        {{ form.csrf }}
-    <table>
-        <tr>
-            <td>email:
-            </td>
-            <td>
-                <input type="email" name="email">
-            </td>
-        </tr>
-        <tr>
-            <td>password:</td>
-            <td><input type="password" name="password"></td>
-        </tr>
-        <tr>
-            <td>
-               <button>login</button>
-            </td>
-        </tr>
-    </table>
-</form>
-    <tr><td><a href="/signup">signup</a></td></tr>
+    <div class="leftColumn">
+        <p></p>
+    </div>
+
+    <div class="column">
+        <form action="/login" method=POST name="login">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            {{ form.csrf }}
+            <table>
+                <tr>
+                    <td>email:
+                    </td>
+                    <td>
+                        <input type="email" name="email">
+                    </td>
+                </tr>
+                <tr>
+                    <td>password:</td>
+                    <td><input type="password" name="password"></td>
+                </tr>
+                <tr>
+                    <td>
+                    <button>login</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <tr><td><a href="/signup">signup</a></td></tr>
+    </div>
 {% endblock %}

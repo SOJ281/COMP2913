@@ -95,9 +95,6 @@ function changeView() {
 }
 
 function genChart(date, data, tableName) {
-  //alert(""+ data)
-  
-  //data = data
   date = date.replace('[', '');
   date = date.replace(']', '');
   var labels = date.split(',');
@@ -105,9 +102,7 @@ function genChart(date, data, tableName) {
   data = data.replace('[', '');
   data = data.replace(']', '');
   var values = data.split(',');
-  
-  //alert(""+ values)
-  //alert(""+ labels)
+
   const ctx = document.getElementById("myChart").getContext('2d');
   const myChart = new Chart(ctx, {
     type: 'line',
@@ -143,4 +138,23 @@ function genChart(date, data, tableName) {
         }
     }
   });
+}
+
+
+function showCost(duration, cost) {
+  duration = duration.replace('[', '');
+  duration = duration.replace(']', '');
+  var dura = duration.split(',');
+
+  cost = cost.replace('[', '');
+  cost = cost.replace(']', '');
+  var cos = cost.split(',');
+
+  var scrollItem = document.getElementById("duration").value+"";
+
+  for (var i = 0; i < cos.length; i++) {
+    if (parseInt(scrollItem) == parseInt(dura[i])) {
+      document.getElementById("costed").innerHTML = cos[i]+"";
+    }
+  }
 }

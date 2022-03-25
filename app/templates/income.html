@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-    <head><link href="/static/table.css" rel="stylesheet" type="text/css">
-    </head>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
         <div class="notification is-danger">
@@ -12,7 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>genChart('{{income_DateAr}}', '{{income_Ar}}', '{{final_date}}')</script>
 <table onmouseover="genChart('{{income_DateAr}}', '{{income_Ar}}', '{{final_date}}')">
-    <caption>Scooter income report</caption>
+    <h1>Scooter income report</h1>
     <thead>
         <tr>
             <th>Data</th>
@@ -39,7 +37,7 @@
             <option value="Weekly">Weekly</option>
             <option value="Monthly">Monthly</option>
             <option value="Yearly">Year</option>
-          </select>
+        </select>
         <table>
             <tr id = "dayC">
                 <td>day:
