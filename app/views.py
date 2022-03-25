@@ -112,15 +112,11 @@ def config_price(id):
 @login_required
 def booking():
     form = BookingForm()
-    cost = []
-    duration = []
-    #cost.append(models.Prices.query.get(i.price_id))
-    for i in models.Prices.query.all():
-        cost.append(i.cost)
-        duration.append(i.duration)
-        print(i.cost)
-        print(i.duration)
-        #if (1 == i.duration):
+
+    prices_dict = {}
+    prices = models.Prices.query.all()
+    for p in prices:
+        prices_dict[p.duration] = p.cost
 
     if form.validate_on_submit():
         duration = int(request.form.get('duration'))
@@ -140,12 +136,17 @@ def booking():
         db.session.add(new_booking)
         db.session.commit()
         return redirect(url_for('card'))
-    return render_template("booking.html", form=form, cost=cost, duration=duration)
+    return render_template("booking.html", form=form, Prices=prices_dict)
 
 @app.route('/card', methods=['GET', 'POST'])
 @login_required
 def card():
     form = CardForm()
+
+    new_booking = models.Book.query.filter_by(user_id=current_user.id).order_by(models.Book.id.desc()).first()
+    scooter = new_booking.scooters
+    price = new_booking.prices
+
     if form.validate_on_submit():
         number_string = request.form.get('number')
         expiration_date_string = request.form.get('expiration_date')
@@ -181,10 +182,6 @@ def card():
         if security_code not in range(100, 1000):
             success = False
 
-        new_booking = models.Book.query.filter_by(user_id=current_user.id).order_by(models.Book.id.desc()).first()
-        scooter = new_booking.scooters
-        price = new_booking.prices
-
         if not success:
             db.session.delete(new_booking)
             scooter.available = 1
@@ -200,7 +197,7 @@ def card():
         sendConfirmationMessage(current_user.username, current_user.email, scooter.id, scooter.location, (str(curdatetime.hour)+":"+str(curdatetime.minute)), curdatetime.date(), durations.get(price.duration))
         flash('Scooter booked successfully! Please check your email for the Booking Confirmation')
         return redirect(url_for("profile"))
-    return render_template("card.html",form=form)
+    return render_template("card.html",form=form, Price=price.cost)
 
 @app.route("/cancel_booking/<id>", methods=['GET', 'POST'])
 def cancel_booking(id):
@@ -303,26 +300,21 @@ def price_view():
                 income_Ar.append(temp_val)
 
         if (viewType == "Yearly"): #If Yearly view
-            myDatec = datetime(year, 1,  1)
-            final_date = "Year of "+ datetime(year, 1, 1).strftime("%Y")
-            for l in range(0, 12):
-                if l == 11:
-                    myDate = datetime(year + 1, 1 + l%11,  1)
-                else:
-                    myDate = datetime(year, 2 + l%11,  1)
-                    
-                myDateLower = datetime(year, 1  + l,  1)
-                date_results = models.Book.query.filter((models.Book.datetime <= myDate) & (models.Book.datetime >= myDateLower)).all()
+            myDatec = datetime(year-1, 12,  1)
+            final_date = "Year of "+ datetime(year, month, 1).strftime("%Y")
+            for l in range(1, 13):
+                myDate = datetime(year, l,  1)
+                date_results = models.Book.query.filter((models.Book.datetime <= myDate) & (models.Book.datetime >= myDatec)).all()
                 temp_val = 0
                 for i in date_results:
                     temp_val = (i.prices.duration * i.prices.cost)
                     total_income += (i.prices.duration * i.prices.cost)
-                income_DateAr.append(1  + l)
+                income_DateAr.append(l)
                 income_Ar.append(temp_val)
+                myDatec = datetime(year, l,  1)
 
 
     return render_template("income.html", final_date=final_date, total_income=total_income, income_Ar=income_Ar, income_DateAr=income_DateAr, form=form)
-
 
 
 @app.route("/price", methods=['GET', 'POST'])
