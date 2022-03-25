@@ -66,3 +66,7 @@ class monthInputForm(FlaskForm):
             (message=u'Invalid month')])
         year = IntegerField('year', validators=[DataRequired
             (message=u'Invalid year')])
+
+class cancelBookingForm(FlaskForm):
+        ID = StringField('ID', validators=[DataRequired
+            (message=u'Invalid viewType')])

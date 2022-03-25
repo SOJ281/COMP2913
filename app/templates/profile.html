@@ -13,6 +13,13 @@
             <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
         </p>
         {% endif %}
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}.</a>.
+            </div>
+        {% endif %}
+        {% endwith %}
         <table >
             <h3>Your bookings</h3>
             <thread>
@@ -25,24 +32,24 @@
                 </tr>
             </thread>
             <tbody>
-            {% for booking in Bookings %}
+            {% for i in range(Bookings | length) %}
             <tr>
-                    <td>{{booking.id}}</td>   
-                    <td>{{scooter.location}}</td>
+                    <td>{{Bookings[i].id}}</td>
+                    <td>{{Scooters[i].location}}</td>
                     <td>
-                        {% if price.duration == 1 %}
+                        {% if Prices[i].duration == 1 %}
                         1 hour
-                        {% elif price.duration == 4 %}
+                        {% elif Prices[i].duration == 4 %}
                         4 hour
-                        {% elif price.duration == 24 %}
+                        {% elif Prices[i].duration == 24 %}
                         1 day
-                        {% elif price.duration == 168 %}
+                        {% elif Prices[i].duration == 168 %}
                         1 week
-                        {% endif %} 
+                        {% endif %}
                     </td>
-                    <td>{{price.cost}}</td> 
-                    <td>{{booking.datetime}}</td> 
-                    <td><button type="button">Cancel</button></a></td>
+                    <td>{{Prices[i].cost}}</td>
+                    <td>{{Bookings[i].datetime}}</td>
+                    <td><a href="/cancel_booking/{{Bookings[i].id}}"><button type="button">Cancel</button></a></td>
             </tr>
             {% endfor %}
         </table>
