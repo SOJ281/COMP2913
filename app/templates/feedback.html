@@ -47,12 +47,14 @@
     active=this.index;
     }
 </script>
-<form method="post">
-<p>Please leave your comments here<br>
-<textarea name="comments" cols="50" rows="5"></textarea>
-<br>
-<input type="submit" name="submit" value="submit"/>
-<input type="reset" name="reset" value="reset"/>
-</p>
+<form action="feedback"method=POST>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    {{ form.csrf }}
+    <p>Please leave your comments here<br>
+        <textarea name="comments" cols="50" rows="5"></textarea>
+        <br>
+        <input type="submit" name="submit" value="submit"/>
+        <input type="reset" name="reset" value="reset"/>
+    </p>
 </form>
 {% endblock %}

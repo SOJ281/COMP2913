@@ -1,5 +1,5 @@
 from flask import Flask, request, redirect, url_for, render_template, flash
-from .forms import LoginForm, SignupForm, BookingForm,ScooterForm,PriceForm,AddPriceForm,CardForm, monthInputForm
+from .forms import LoginForm, SignupForm, BookingForm,ScooterForm,PriceForm,AddPriceForm,CardForm, monthInputForm, feedbackForm
 from app import app, models, db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user, logout_user
@@ -25,7 +25,14 @@ def index():
 
 @app.route('/feedback', methods=['GET', 'POST'])
 def feedback():
-    return render_template("feedback.html")
+    form = feedbackForm()
+    if form.validate_on_submit():
+        comment = request.form.get('comments')
+        new_comment = models.Feedback(user_id=current_user.id, comments=comment)
+        db.session.add(new_comment)
+        db.session.commit()
+        return redirect(url_for('profile'))
+    return render_template("feedback.html", form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

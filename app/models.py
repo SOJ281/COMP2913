@@ -63,3 +63,9 @@ class Book(db.Model):
     price_id = db.Column(db.Integer, db.ForeignKey('prices.id'))
     datetime = db.Column(db.DateTime)
     completed = db.Column(db.Integer) #1 if booking completed, #0 if still going on
+
+class Feedback(db.Model):
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    comments = db.Column(db.Text)

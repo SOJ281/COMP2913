@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, BooleanField
+from wtforms import StringField, IntegerField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, length,EqualTo
 
 
@@ -70,3 +70,8 @@ class monthInputForm(FlaskForm):
 class cancelBookingForm(FlaskForm):
         ID = StringField('ID', validators=[DataRequired
             (message=u'Invalid viewType')])
+
+
+class feedbackForm(FlaskForm):
+    comments = TextAreaField('comments', validators=[DataRequired
+            (message=u"Comments cannot be empty"), length(max=500)])
