@@ -25,11 +25,17 @@ This is an instruction how to run the project on a Linux machine (assumming that
 ## Staff login
 
 Staff details will be pre-saved in the database meaning there will be no registration option for staff, only login. 
+There are two types of staff: employee and manager.
 
-One staff member has been added for now: 
+One staff member of each type has been added for now: 
 
+Employee: \
 email: staff_1@gmail.com \
 password: password12345
+
+Manager: \
+email: manager@gmail.com \
+password: 1234567
 
 
 
