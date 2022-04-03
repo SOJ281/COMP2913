@@ -10,7 +10,8 @@ class Users(UserMixin, db.Model):
     password = db.Column(db.String(100))
     age = db.Column(db.Integer)
     # staff will be pre-added to the database
-    staff = db.Column(db.Boolean, default=False)
+    #0-user, 1-employee, 2-manager
+    staff = db.Column(db.Integer, default=0)
     #one-to-many relationship, a user can have multiple cards
     cards = db.relationship('CardDetails', backref='users', lazy='dynamic')
     #many-to-many relationship for booking scooters

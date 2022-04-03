@@ -79,10 +79,12 @@ def login():
             flash('Login details incorrect. Try again!')
             return render_template("login.html", form=form)
         login_user(user)
-        if user.staff==True:
-            return redirect(url_for('staff'))
-        else:
+        if user.staff==0:
             return redirect(url_for('booking'))
+        elif user.staff==1:
+            return redirect(url_for('employee'))
+        elif user.staff==2:
+            return redirect(url_for('staff'))
     return render_template("login.html", form=form)
 
 @app.route("/staff", methods=['GET', 'POST'])
@@ -91,6 +93,10 @@ def staff():
     for i in models.Scooters.query.all():
         scooters.append(i)
     return render_template("staff.html",Scooters = scooters)
+
+@app.route("/employee", methods=['GET', 'POST'])
+def employee():
+    return render_template("employee.html")
 
 @app.route("/add_scooter", methods=['GET', 'POST'])
 def add_scooter():
