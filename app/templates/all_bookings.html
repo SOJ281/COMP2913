@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Staff</h1>
+
+    {% if current_user.is_authenticated %}
+        <p class="nav-item", id="logoutAction">
+            <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
+        </p>
+    {% endif %}
+    <button onclick="location.href='/staff'">Staff</button>
+    <table >
+        <h3>All Bookings</h3>
+        <thread>
+            <tr>
+                <th>Booking ID</th>
+                <th>Username</th>
+                <th>Location</th>
+                <th>Duration</th>
+                <th>Price</th>
+                <th>Date</th>
+            </tr>
+        </thread>
+        <tbody>
+            {% for i in range(Bookings | length) %}
+            <tr>
+                    <td>{{Bookings[i].id}}</td>
+                    <td>{{Users[i].username}}</td>
+                    <td>{{Scooters[i].location}}</td>
+                    <td>
+                        {% if Prices[i].duration == 1 %}
+                        1 hour
+                        {% elif Prices[i].duration == 4 %}
+                        4 hour
+                        {% elif Prices[i].duration == 24 %}
+                        1 day
+                        {% elif Prices[i].duration == 168 %}
+                        1 week
+                        {% endif %}
+                    </td>
+                    <td>{{Prices[i].cost}}</td>
+                    <td>{{Bookings[i].datetime}}</td>
+                    
+            </tr>
+            {% endfor %}
+        <tbody>
+   
+
+{% endblock %}

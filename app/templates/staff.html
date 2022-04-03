@@ -31,12 +31,14 @@
                 <td><a href="/config_scooter/{{scooter.id}}"><button type="button">Configure</button></a></td>           
         </tr>
         {% endfor %}
-        <p>weekly income view</p>
-        <button onclick="location.href='/price_view'">Click Me</button>
-        <p>add scooter</p>
-        <button onclick="location.href='/add_scooter'">Click Me</button>
-        <p>view price</p>
-        <button onclick="location.href='/price'">Click Me</button>
+       
+        <button onclick="location.href='/price_view'">Income</button>
+
+        <button onclick="location.href='/add_scooter'">Add Scooter</button>
+
+        <button onclick="location.href='/price'">View Price</button>
+        <button onclick="location.href='/view_feedback'">View Feedback</button>
+        <button onclick="location.href='/all_bookings'">All Bookings</button>
         <p id="price_view"></p>
         </tbody>
     </table>

@@ -69,3 +69,4 @@ class Feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     comments = db.Column(db.Text)
+    priority = db.Column(db.Integer) 

@@ -26,13 +26,46 @@ def index():
 @app.route('/feedback', methods=['GET', 'POST'])
 def feedback():
     form = feedbackForm()
+    str1 = "not working"
+    temp_comment = request.form.get('comments')
     if form.validate_on_submit():
         comment = request.form.get('comments')
-        new_comment = models.Feedback(user_id=current_user.id, comments=comment)
+        if str1 in temp_comment.lower():
+            priority = 1
+        else:
+            priority = 2
+        new_comment = models.Feedback(user_id=current_user.id, comments=comment, priority = priority)
         db.session.add(new_comment)
         db.session.commit()
         return redirect(url_for('profile'))
     return render_template("feedback.html", form=form)
+
+@app.route('/view_feedback', methods=['GET', 'POST'])
+def view_feedback():
+    users = []
+    comments = []
+    for i in models.Feedback.query.all():
+        if i.priority == 1:
+            comments.append(i)
+            users.append(models.Users.query.get(i.user_id))
+    for i in models.Feedback.query.all():
+        if i.priority == 2:
+            comments.append(i)
+            users.append(models.Users.query.get(i.user_id))
+    return render_template("view_feedback.html",Comments = comments, Users = users)
+
+@app.route('/all_bookings', methods=['GET', 'POST'])
+def all_bookings():
+    bookings = []
+    prices = []
+    scooters = []
+    users = []
+    for i in models.Book.query.all():
+        bookings.append(i)
+        prices.append(models.Prices.query.get(i.price_id))
+        scooters.append(models.Scooters.query.get(i.scooter_id))
+        users.append(models.Users.query.get(i.user_id))
+    return render_template("all_bookings.html", Users=users, Bookings=bookings, Prices=prices, Scooters=scooters)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
