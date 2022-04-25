@@ -1,15 +1,36 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Main page</title>
+        <!-- meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 
-{% block content %}
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" 
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="../static/style2.css">
+        <script src="../static/index.js"></script>
+    </head>
 
-    <h1>Main page</h1>
+    <body>
+        <div class="main">
+            <h1>E-scooters renting</h1>
+            <a class="btn btn-primary btn-lg" href="{{url_for('signup')}}" role="button">Sign Up</a>
+            <a class="btn btn-primary btn-lg" href="{{url_for('login')}}" role="button">Log in</a>
+        </div>
+    </body>
+    
+  
 
-    <div class="leftColumn">
-        <p></p>
-    </div>
 
-    <div class="column">
-        <p></p>
-    </div>
+  
+<!--
+  <footer>
+    <p>Scooter loan company<sup>(TM)</sup></p>
+    <p>Email: <a href="mailto:hege@example.com">hege@example.com</a></p>
+    <p>Phone: 07801 873625</p>
+  </footer> 
+--->
+</html>
 
-{% endblock %}

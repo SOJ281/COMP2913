@@ -288,7 +288,7 @@ def signup():
         if userN:
             flash("This username is already taken!")
             return render_template("signup.html", form=form)
-        new_user = models.Users(username=username, age=age, email=email, password=generate_password_hash(password, method='sha256'))
+        new_user = models.Users(username=username, age=age, email=email, password=generate_password_hash(password, method='sha256'), staff=0)
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for("login"))

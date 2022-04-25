@@ -3,53 +3,55 @@
 {% block content %}
     <h1>Sign Up</h1>
 
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <div class="notification is-danger">
-            {{ messages[0] }}.</a>.
-        </div>
-    {% endif %}
-    {% endwith %}
-    <br>
-    <form action="/signup" method=POST name="signup">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        {{ form.csrf }}
-        <table>
-            <tr>
-                <td>username:
-                </td>
-                <td>
-                    <input type="text" name="username">
-                </td>
-            </tr>
-            <tr>
-                <td>age:
-                </td>
-                <td>
-                    <input type="text" name="age">
-                </td>
-            </tr>
-            <tr>
-                <td>email:
-                </td>
-                <td>
-                    <input type="email" name="email">
-                </td>
-            </tr>
-            <tr>
-                <td>password:</td>
-                <td><input type="password" name="password"></td>
-            </tr>
-            <tr>
-                <td>confirm password:</td>
-                <td><input type="password" name="pw_confirm"></td>
-            </tr>
-            <tr>
-                <td>
-                <p><input type="submit" value="Sign Up"></p>
-                </td>
-            </tr>
-        </table>
-
-</form>
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}.</a>.
+            </div>
+        {% endif %}
+        {% endwith %}
+        <br>
+        <form action="/signup" method=POST name="signup">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            {{ form.csrf }}
+            <table>
+                <tr>
+                    <td>username:
+                    </td>
+                    <td>
+                        <input type="text" name="username">
+                    </td>
+                </tr>
+                <tr>
+                    <td>age:
+                    </td>
+                    <td>
+                        <input type="text" name="age">
+                    </td>
+                </tr>
+                <tr>
+                    <td>email:
+                    </td>
+                    <td>
+                        <input type="email" name="email">
+                    </td>
+                </tr>
+                <tr>
+                    <td>password:</td>
+                    <td><input type="password" name="password"></td>
+                </tr>
+                <tr>
+                    <td>confirm password:</td>
+                    <td><input type="password" name="pw_confirm"></td>
+                </tr>
+                <tr>
+                    <td>
+                    <p><button class="btn btn-outline-primary">Sign Up</button></p>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    
 {% endblock %}
