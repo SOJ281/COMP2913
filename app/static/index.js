@@ -35,11 +35,11 @@ $('.tab a').on('click', function (e) {
 
 function showLocation() {
   var mapDict = {
-    "Trinity centre" : ["LS1 5AT"],
-    "Train Station": ["LS1 4DY"],
-    "Merrion centre": ["LS2 8NG"],
-    "LRI hospital": ["LS1 3EX"],
-    "UoL Edge sports centre": ["LS2 9JT"]
+    "Trinity centre" : ["27 Albion St, Leeds LS1 5AT"],
+    "Train Station": ["New Station St, Leeds LS1 4DY"],
+    "Merrion centre": ["Merrion Way, Leeds LS2 8NG"],
+    "LRI hospital": ["Infirmary Square, Leicester LE1 5WW"],
+    "UoL Edge sports centre": ["University of Leeds, Willow Terrace Road, Leeds LS2 9JT"]
   };
   var geocoder = new google.maps.Geocoder();
   
@@ -97,10 +97,12 @@ function changeView() {
 function genChart(date, data, tableName) {
   date = date.replace('[', '');
   date = date.replace(']', '');
+  date = date.replaceAll('&#39;','');
   var labels = date.split(',');
 
   data = data.replace('[', '');
   data = data.replace(']', '');
+  data.replace('&#39;','');
   var values = data.split(',');
 
   const ctx = document.getElementById("myChart").getContext('2d');

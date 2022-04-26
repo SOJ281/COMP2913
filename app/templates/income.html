@@ -8,13 +8,11 @@
     {% endif %}
     {% endwith %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>genChart('{{income_DateAr}}', '{{income_Ar}}', '{{final_date}}')</script>
-<table onmouseover="genChart('{{income_DateAr}}', '{{income_Ar}}', '{{final_date}}')">
+<table>
     <h1>Scooter income report</h1>
     <thead>
         <tr>
             <th>Data</th>
-            <th>income</th>
         </tr>
     </thead>
     <tbody>
@@ -30,9 +28,10 @@
     </tbody>
     </table>
     <canvas id="myChart" style="width:80%;height:400px;"></canvas>
-    <form action="/price_view" method=POST name="date" onmouseover="genChart('{{income_DateAr}}', '{{income_Ar}}', '{{final_date}}')">
+    <form action="/price_view" method=POST name="date">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         {{ form.csrf }}
+        <script>genChart('{{income_DateAr}}', '{{income_Ar}}', '{{final_date}}'); </script>
         <select id="viewType" name="viewType" onchange = "changeView()" >
             <option value="Weekly">Weekly</option>
             <option value="Monthly">Monthly</option>
@@ -43,19 +42,19 @@
                 <td>day:
                 </td>
                 <td>
-                    <input id = "day" type="day" name="day">
+                    <input id = "day" type="day" name="day" value="{{day}}">
                 </td>
             </tr>
             <tr id = "monthC">
                 <td>month:
                 </td>
                 <td>
-                    <input id = "month" type="month" name="month">
+                    <input id = "month" type="month" name="month" value="{{month}}">
                 </td>
             </tr>
             <tr id = "yearC">
                 <td>year:</td>
-                <td><input id = "year" type="year" name="year"></td>
+                <td><input id = "year" type="year" name="year" value="{{year}}"></td>
             </tr>
             <tr>
                 <td>
@@ -63,6 +62,13 @@
                 </td>
             </tr>
         </table>
+        <script>
+            document.querySelector('#viewType').value = '{{viewType}}';
+            changeView();
+            if ("{{valid}}" == "False") {
+                alert("Invalid date entered");
+            }
+        </script>
     </form>
     <script></script>
 {% endblock %}
