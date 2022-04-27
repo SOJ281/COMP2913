@@ -319,10 +319,15 @@ def price_view():
     valid = True
     #Determines graph data and returns for days and total
     if form.validate_on_submit():
+        dateHolder = request.form.get('fullDate').split('-')
         viewType = request.form.get('viewType')
-        day = int(request.form.get('day'))
-        month = int(request.form.get('month'))
-        year = int(request.form.get('year'))
+
+        day = int(dateHolder[2])
+        month = int(dateHolder[1])
+        year = int(dateHolder[0])
+        #day = int(request.form.get('day'))
+        #month = int(request.form.get('month'))
+        #year = int(request.form.get('year'))
 
         try:
             if (viewType == "Weekly"): #If weekly view

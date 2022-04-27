@@ -38,6 +38,12 @@
             <option value="Yearly">Year</option>
         </select>
         <table>
+            <tr>
+                <td>
+                    <input type="date" name="fullDate">
+                </td>
+            </tr>
+            <!--
             <tr id = "dayC">
                 <td>day:
                 </td>
@@ -55,7 +61,7 @@
             <tr id = "yearC">
                 <td>year:</td>
                 <td><input id = "year" type="year" name="year" value="{{year}}"></td>
-            </tr>
+            </tr>-->
             <tr>
                 <td>
                 <button>submit</button>
@@ -63,6 +69,20 @@
             </tr>
         </table>
         <script>
+            /*alert('{{day}}-{{month}}-{{year}}');
+            //var mon = '{{month}}';
+            if (mon.length == 1)
+                mon = '0' + mon;
+            alert(mon);
+            var today = moment().format('{{day}}/'+mon+'/{{year}}');
+            alert('{{day}}-{{month}}-{{year}}');
+            document.getElementById("fullDate").value = today;*/
+           // var date = new Date();
+            //date.setYear(parseInt())
+            //date.setMonth()
+            //date.setDate()
+            document.getElementById("fullDate").valueAsDate = new Date(parseInt('{{year}}'), parseInt('{{month}}'), parseInt('{{day}}'));
+
             document.querySelector('#viewType').value = '{{viewType}}';
             changeView();
             if ("{{valid}}" == "False") {
