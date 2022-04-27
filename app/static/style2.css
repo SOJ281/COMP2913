@@ -38,6 +38,11 @@ h1 {
     font-size: 20px;
 }
 
+.navbar a:hover {
+    color: black;
+}
+
+
 /*--- sign up/login pages ---*/
 
 .container {
@@ -49,6 +54,105 @@ h1 {
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
+
+}
+
+/*--- booking page ---*/
+
+#map {
+    margin: auto;
+}
+
+.container2 {
+    margin: auto;
+    text-align: center;
+}
+
+/*--- profile page ---*/
+
+h2 {
+    text-align: center;
+}
+
+.feedback {
+    text-align: center;
+}
+
+.feedback h3 {
+    margin-left: 25px;
+    margin-top: 50px;
+    margin-bottom: 25px;
+}
+
+.feedback a {
+    margin-left: 25px;
+}
+
+.bookings {
+    margin-left: 25px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.bookings table {
+    margin: auto;
+}
+
+/*--- feedback page ---*/
+
+.stars{
+    width: 100%;
+    list-style: none;
+    line-height: 67px;
+    color: blue;
+    text-align: center;
+    margin-top: 25px;
+}
+
+.stars span{
+    font-size: 30px;
+    margin-left: 20px;
+}
+.stars span:after{
+    content: '☆';
+}
+.stars .show:after,.stars .show2:after{
+    content: '★';
+}
+
+.feedbackForm p{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.question1 {
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+.question2 {
+    font-size: 20px;
+}
+
+/*--- manager page ---*/
+
+.manager {
+    margin: auto;
+    text-align: center;
+}
+
+.manager table{
+    margin: auto;
+    text-align: center;
+}
+
+/*--- price list page ---*/
+
+.container2 table {
+    margin: auto;
+    text-align: center;
 }
 
 

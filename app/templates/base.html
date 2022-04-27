@@ -22,12 +22,14 @@
         <div class="collapse navbar-collapse" id="main-navigation">
           <a class="nav-link" href="/">Home</a>
           {% if current_user.is_authenticated %}
+          {% if current_user.staff == 0 %}
           <a class="nav-link" href="{{url_for('profile')}}">Profile</a>
-          {% if current_user.staff %}
-          <a class="nav-link" href="{{url_for('staff')}}">Staff</a>
-          <a class="nav-link" href="{{url_for('price_view')}}">Price</a>
-          {% endif %}
           <a class="nav-link" href="{{url_for('booking')}}">Booking</a>
+          {% endif %}
+          {% if current_user.staff != 0%}
+          <a class="nav-link" href="{{url_for('staff')}}">Staff</a>
+          <a class="nav-link" href="{{url_for('price_view')}}">Income</a>
+          {% endif %}
           <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
           {% else %}
           <a class="nav-link" href="{{url_for('signup')}}">Sign Up</a>
@@ -39,13 +41,22 @@
   </body>
   
 
+<!-- 
+<div class="container-fluid">
+  <div class="footer">
+    <div class="row text-center">
+      <div class="col-md-3">
+        <p>Scooter loan company<sup>(TM)</sup></p>
+      </div>
+      <div class="col-md-3">
+        <p>Email: <a href="mailto:hege@example.com">hege@example.com</a></p>
+      </div>
+      <div class="col-md-3">
+        <p>Phone: 07801 873625</p>
+      </div>
+    </div>
+  </div>
+</div>
+-->   
 
-
-<!--
-  <footer>
-    <p>Scooter loan company<sup>(TM)</sup></p>
-    <p>Email: <a href="mailto:hege@example.com">hege@example.com</a></p>
-    <p>Phone: 07801 873625</p>
-  </footer> 
---->
 </html>

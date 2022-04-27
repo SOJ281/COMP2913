@@ -3,33 +3,35 @@
 {% block content %}
 <h1>Add Scooter</h1>
 
+<div class="container2">
+  <form action="/add_scooter" method=POST name="login">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        {{ form.csrf }}
 
-<form action="/add_scooter" method=POST name="login">
-<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-      {{ form.csrf }}
+      <label for="location">Location</label>
+      <select id="location" name="location">
+        <option value="Trinity centre">Trinity centre</option>
+        <option value="Train Station">Train Station</option>
+        <option value="Merrion centre">Merrion centre</option>
+        <option value="LRI hospital">LRI hospital</option>
+        <option value="UoL Edge sports centre">UoL Edge sports centre</option>
+      </select>
 
-    <label for="location">Location</label>
-    <select id="location" name="location">
-      <option value="Trinity centre">Trinity centre</option>
-      <option value="Train Station">Train Station</option>
-      <option value="Merrion centre">Merrion centre</option>
-      <option value="LRI hospital">LRI hospital</option>
-      <option value="UoL Edge sports centre">UoL Edge sports centre</option>
-    </select>
+      <br>
 
-    <br>
+      <label for="available">Available</label>
+      <select id="available" name="available">
+        <option value=1> Available</option>
+        <option value=2> Unavailable</option>
 
-    <label for="available">Available</label>
-    <select id="available" name="available">
-      <option value=1> Available</option>
-      <option value=2> Unavailable</option>
+      </select>
 
-    </select>
+      <br>
 
-    <br>
+      <p><button class="btn btn-outline-primary">Add scooter</button></p>
 
-    <p><input type="submit" value="Add Scooter"/></p>
+  </form>
+</div>
 
-</form>
 
 {% endblock %}

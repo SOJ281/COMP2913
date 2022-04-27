@@ -3,48 +3,48 @@
 {% block content %}
     <h1>Price List</h1>
 
-    {% if current_user.is_authenticated %}
-    <p class="nav-item", id="logoutAction">
-        <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
-    </p>
-    {% endif %}
-    <table>
-        <thread>
+    <div class="container2">
+        <table>
+            <thread>
+                <tr>
+                    <th>Price ID</th>
+                    <th>Duration</th>
+                    <th>Cost</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thread>
+            <tbody>
+            
             <tr>
-                <th>Price ID</th>
-                <th>Duration</th>
-                <th>Cost</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thread>
-        <tbody>
-        
-        <tr>
-            {% for price in Prices %}
-            <tr>
-                    <td>{{price.id}}</td>
+                {% for price in Prices %}
+                <tr>
+                        <td>{{price.id}}</td>
 
-                    {% if price.duration == 1 %}   
-                    <td>1 hour</td>
-                    {% elif price.duration == 4 %}   
-                    <td>4 hour</td>
-                    {% elif price.duration == 24 %}   
-                    <td> 1 day</td>
-                    {% elif price.duration == 168 %}
-                    <td>1 week</td>
-                    {% endif %}
+                        {% if price.duration == 1 %}   
+                        <td>1 hour</td>
+                        {% elif price.duration == 4 %}   
+                        <td>4 hour</td>
+                        {% elif price.duration == 24 %}   
+                        <td> 1 day</td>
+                        {% elif price.duration == 168 %}
+                        <td>1 week</td>
+                        {% endif %}
 
-                    
-                    <td>{{price.cost}}£</td>
-                   
-                    <td><a href="/config_price/{{price.id}}"><button type="button">Configure</button></a></td>
-                    <td><a href="/delete_price/{{price.id}}"><button type="button">Delete</button></a></td>              
-            </tr>
-            {% endfor %}
-               
                         
-        </tr>
-        <button onclick="location.href='/add_price'">Add Price</button>
+                        <td>{{price.cost}}£</td>
+                    
+                        <td><a class="btn btn-outline-primary btn-sm" href="/config_price/{{price.id}}">Configure</a></td>
+                        <td><a class="btn btn-outline-primary btn-sm" href="/delete_price/{{price.id}}">Delete</a></td>              
+                </tr>
+                {% endfor %}
+                
+                            
+            </tr>
+            <button class="btn btn-outline-primary" onclick="location.href='/add_price'">Add Price</button>
+            </tbody>
+        </table>
+    </div>
+    
 
 {% endblock %}

@@ -1,15 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Booking Page</h1>
-    {% if current_user.is_authenticated %}
-    <p class="nav-item", id="logoutAction">
-        <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
-    </p>
-    <p class="nav-item", id="profileAction">
-      <a class="nav-link" href="{{url_for('profile')}}">Profile</a>
-    </p>
-    {% endif %}
+    <h1>Book a scooter</h1>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
         <div class="notification is-danger">
@@ -17,15 +9,16 @@
         </div>
     {% endif %}
     {% endwith %}
-    <div id="map" style="width:70%;height:700px;"></div>
+    <div id="map" style="width:80%;height:700px;"></div>
     <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
     <script async
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2OnK2cetLAhKZXr5BedIYOFrL5Oo9_bc&callback=showLocation" async defer>
     </script>
     <br>
-    <form action="/booking" method=POST name="login">
+    <div class="container2">
+      <form action="/booking" method=POST name="login">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        {{ form.csrf }}
+          {{ form.csrf }}
 
         <label for="location">Location</label>
         <select id="location" name="location" onchange = "showLocation()" >
@@ -45,12 +38,11 @@
           <option value=24>1 day - £{{ Prices.get(24) }}</option>
           <option value=168>1 week - £{{ Prices.get(168) }}</option>
         </select>
-
         <br>
-
-        <p><input type="submit" value="Make Booking"></p>
-
-    </form>
+        <p><button class="btn btn-outline-primary">Make booking</button></p>
+      </form>
+    </div>
+   
 
 {% endblock %}
 

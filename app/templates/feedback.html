@@ -2,11 +2,11 @@
 
 {% block content %}
 <div class="feedback">
-    <div class="header">
+    <div class="question1">
         Are you satisfied with our app? Please leave your comments here, your suggestion is our energy of progress.
     </div>
-    <div class="question">
-        what do you think of the app experience
+    <div class="question2">
+        What do you think of the app experience?
     </div>
     <div class="content">
         <div class="stars">
@@ -47,14 +47,16 @@
     active=this.index;
     }
 </script>
-<form action="feedback"method=POST>
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-    {{ form.csrf }}
-    <p>Please leave your comments here<br>
-        <textarea name="comments" cols="50" rows="5"></textarea>
-        <br>
-        <input type="submit" name="submit" value="submit"/>
-        <input type="reset" name="reset" value="reset"/>
-    </p>
-</form>
+<div class="feedbackForm">
+    <form action="feedback"method=POST>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        {{ form.csrf }}
+        <p>Please leave your comments here<br>
+            <textarea name="comments" cols="50" rows="5"></textarea>
+            <br>
+            <button class="btn btn-outline-primary" type="submit">Submit</button>
+        </p>
+    </form>
+</div>
+
 {% endblock %}

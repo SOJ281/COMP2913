@@ -3,44 +3,45 @@
 {% block content %}
     <h1>Manager page</h1>
 
-    {% if current_user.is_authenticated %}
-        <p class="nav-item", id="logoutAction">
-            <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
-        </p>
-    {% endif %}
+    
 
-    <table>
-        <thread>
+    <div class="manager">
+        <div class="manage">
+                
+            
+                <button class="btn btn-primary" onclick="location.href='/add_scooter'">Add Scooter</button>
+            
+                <button class="btn btn-primary" onclick="location.href='/price'">View Price</button>
+                <button class="btn btn-primary" onclick="location.href='/view_feedback'">View Feedback</button>
+                <button class="btn btn-primary" onclick="location.href='/all_bookings'">All Bookings</button>
+            </div>     
+            <p id="price_view"></p>
+       <table>
+            <thread>
+                <tr>
+                    <th>Scooter ID</th>
+                    <th>Location</th>
+                    <th>Available</th>
+                    <th></th>
+                </tr>
+            </thread>
+            <tbody>
+            {% for scooter in Scooters %}
             <tr>
-                <th>Scooter ID</th>
-                <th>Location</th>
-                <th>Available</th>
-                <th></th>
+                    <td>{{scooter.id}}</td>   
+                    <td>{{scooter.location}}</td>
+                    {% if scooter.available == 1 %}
+                    <td>Available</td>
+                    {% else %}
+                    <td>Unavailable</td>
+                    {% endif %}
+                    <td><a href="/config_scooter/{{scooter.id}}"><button class="btn btn-outline-primary btn-sm" type="button">Configure</button></a></td>           
             </tr>
-        </thread>
-        <tbody>
-        {% for scooter in Scooters %}
-        <tr>
-                <td>{{scooter.id}}</td>   
-                <td>{{scooter.location}}</td>
-                {% if scooter.available == 1 %}
-                <td>Available</td>
-                {% else %}
-                <td>Unavailable</td>
-                {% endif %}
-                <td><a href="/config_scooter/{{scooter.id}}"><button type="button">Configure</button></a></td>           
-        </tr>
-        {% endfor %}
-       
-        <button onclick="location.href='/price_view'">Income</button>
-
-        <button onclick="location.href='/add_scooter'">Add Scooter</button>
-
-        <button onclick="location.href='/price'">View Price</button>
-        <button onclick="location.href='/view_feedback'">View Feedback</button>
-        <button onclick="location.href='/all_bookings'">All Bookings</button>
-        <p id="price_view"></p>
-        </tbody>
-    </table>
+            {% endfor %}
+        
+            </tbody>
+        </table> 
+    </div>
+    
 
 {% endblock %}
