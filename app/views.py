@@ -1,5 +1,6 @@
 from flask import Flask, request, redirect, url_for, render_template, flash
-from .forms import LoginForm, SignupForm, BookingForm,ScooterForm,PriceForm,AddPriceForm,CardForm, monthInputForm, feedbackForm
+from .forms import LoginForm, SignupForm, BookingForm,ScooterForm,PriceForm,\
+    AddPriceForm,CardForm, monthInputForm, feedbackForm
 from app import app, models, db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user, logout_user
@@ -239,6 +240,13 @@ def card():
             flash("Payment Unsuccesful, plase check card details")
             return redirect(url_for('booking'))
 
+        cardDetails = models.CardDetails(number=number_string, name=name,
+                                         security_code=str(security_code),
+                                         expiration_date=expiration_date_string,
+                                         user_id=current_user.id
+                                         )
+        db.session.add(cardDetails)
+        db.session.commit()
         durations = {1: "1 hour",
                      4: "4 hours",
                      24: "1 day",
@@ -264,6 +272,8 @@ def cancel_booking(id):
     else:
         flash("Failed to cancel booking. You can only cancel within 15 minutes of booking")
     return redirect('/profile')
+
+
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():

@@ -55,7 +55,7 @@ class CardForm(FlaskForm):
                                                    (message=u"CVV / CVC required")])
         name = StringField('name', validators=[DataRequired
                                                    (message=u"Name on Card required")])
-        save = BooleanField('security_code')
+        save = BooleanField('save')
 
 class monthInputForm(FlaskForm):
         viewType = StringField('viewType', validators=[DataRequired
