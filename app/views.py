@@ -1,6 +1,6 @@
 from flask import Flask, request, redirect, url_for, render_template, flash
 from .forms import LoginForm, SignupForm, BookingForm,ScooterForm,PriceForm,\
-    AddPriceForm,CardForm, monthInputForm, feedbackForm
+    AddPriceForm,CardForm, monthInputForm, feedbackForm, GuestForm
 from app import app, models, db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, current_user, logout_user
@@ -97,7 +97,41 @@ def staff():
 
 @app.route("/employee", methods=['GET', 'POST'])
 def employee():
-    return render_template("employee.html")
+    form = GuestForm()
+
+    prices_dict = {}
+    prices = models.Prices.query.all()
+    for p in prices:
+        prices_dict[p.duration] = p.cost
+
+    if form.validate_on_submit():
+        username = request.form.get('username')
+        email = request.form.get('email')
+        duration = int(request.form.get('duration'))
+        location = request.form.get('location')
+
+        scooter = models.Scooters.query.filter_by(location=location, available=1).first()
+        price = models.Prices.query.filter_by(duration=duration).first()
+        curdatetime = datetime.now()
+
+        #check if scooter at the location is free
+        if scooter is None:
+            flash('No scooter available at location!')
+            return render_template("employee.html", form=form, Prices=prices_dict)
+
+        new_booking = models.Book(user_id=current_user.id, scooter_id=scooter.id, price_id=price.id, datetime=curdatetime, completed=0)
+        scooter.available = 2
+        db.session.add(new_booking)
+        db.session.commit()
+
+        durations = {1: "1 hour",
+                     4: "4 hours",
+                     24: "1 day",
+                     168: "1 week"}
+
+        sendConfirmationMessage(username, email, scooter.id, scooter.location, (str(curdatetime.hour)+":"+str(curdatetime.minute)), curdatetime.date(), durations.get(price.duration))
+        flash('Scooter booked successfully! Confirmation has been sent via email')
+    return render_template("employee.html", form=form, Prices=prices_dict)
 
 @app.route("/add_scooter", methods=['GET', 'POST'])
 def add_scooter():
@@ -237,16 +271,16 @@ def card():
             db.session.delete(new_booking)
             scooter.available = 1
             db.session.commit()
-            flash("Payment Unsuccesful, plase check card details")
+            flash("Payment Unsuccesful, please check card details")
             return redirect(url_for('booking'))
 
-        cardDetails = models.CardDetails(number=number_string, name=name,
-                                         security_code=str(security_code),
-                                         expiration_date=expiration_date_string,
-                                         user_id=current_user.id
-                                         )
-        db.session.add(cardDetails)
-        db.session.commit()
+        # cardDetails = models.CardDetails(number=number_string, name=name,
+        #                                  security_code=str(security_code),
+        #                                  expiration_date=expiration_date_string,
+        #                                  user_id=current_user.id
+        #                                  )
+        # db.session.add(cardDetails)
+        # db.session.commit()
         durations = {1: "1 hour",
                      4: "4 hours",
                      24: "1 day",

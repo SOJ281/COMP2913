@@ -27,7 +27,16 @@ class BookingForm(FlaskForm):
         location = StringField('Location', validators=[DataRequired
             (message=u'Location is required')])
 
-
+class GuestForm(FlaskForm):
+        username = StringField('Username', validators=[DataRequired
+            (message=u'Username cannot be empty'), length(min=1, max=8)])
+        email = StringField('Email', validators=[DataRequired
+            (message=u'Email cannot be empty'), length(min=5, max=50)])
+        duration = IntegerField('Duration', validators=[DataRequired
+            (message=u'Duration is required')])
+        location = StringField('Location', validators=[DataRequired
+            (message=u'Location is required')])
+            
 class ScooterForm(FlaskForm):
         available = IntegerField('Available', validators=[DataRequired
             (message=u'Available is required')])
