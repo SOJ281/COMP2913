@@ -26,9 +26,12 @@
           <a class="nav-link" href="{{url_for('profile')}}">Profile</a>
           <a class="nav-link" href="{{url_for('booking')}}">Booking</a>
           {% endif %}
-          {% if current_user.staff != 0%}
+          {% if current_user.staff == 2 %}
           <a class="nav-link" href="{{url_for('staff')}}">Staff</a>
           <a class="nav-link" href="{{url_for('price_view')}}">Income</a>
+          {% endif %}
+          {% if current_user.staff == 1 %}
+          <a class="nav-link" href="{{url_for('employee')}}">Employee</a>
           {% endif %}
           <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
           {% else %}
