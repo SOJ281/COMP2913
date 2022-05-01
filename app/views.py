@@ -302,7 +302,7 @@ def card():
             flash("Payment Unsuccesful, please check card details")
             return redirect(url_for('booking'))
 
-        if save and models.CardDetails.query.filter_by(number=number_string, name=name, security_code=str(security_code), expiration_date=expiration_date_string, user_id=current_user.id) is None:
+        if save and models.CardDetails.query.filter_by(number=number_string, name=name, security_code=str(security_code), expiration_date=expiration_date_string, user_id=current_user.id).first() is None:
             cardDetails = models.CardDetails(number=number_string, name=name,
                                             security_code=str(security_code),
                                             expiration_date=expiration_date_string,
@@ -373,11 +373,11 @@ def signup():
 def logout():
   logout_user()
   return redirect(url_for('index'))
-    
+
 
 #Page for viewing income data
 #User inputs day,month,year, and whether the scope should be year/month/week
-#Finds all bookings in that time period, 
+#Finds all bookings in that time period,
 #returns data in different format for easier processes
 @app.route('/price_view', methods=['GET', 'POST'])
 def price_view():
@@ -433,7 +433,7 @@ def price_view():
                     import calendar
                     income_DateAr.append(daysOfWeek[l])
                     income_Ar.append(temp_val)
-                    
+
             if (viewType == "Monthly"): #If monthly view
                 day = ""
                 from calendar import monthrange
