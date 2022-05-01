@@ -54,6 +54,7 @@ h1 {
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
+    margin-top: 20px;
 
 }
 
@@ -121,10 +122,9 @@ h2 {
 }
 
 .feedbackForm p{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 40%;
 }
 
 .question1 {
