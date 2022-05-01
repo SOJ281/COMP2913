@@ -1,6 +1,7 @@
 # COMP2913
 
-Repository for project
+Repository for the project implementing a scooter renting web application. \
+Implemented by Team 6: Deep Waghulde, Kaiwen Bao, Natalia Nikliborc, Ruilin Li, Scott James, Zhan Feng and Zhanpeng Zhu.
 
 ## Running the project files
 
