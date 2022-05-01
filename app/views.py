@@ -235,7 +235,7 @@ def booking():
         #check if scooter at the location is free
         if scooter is None:
             flash('No scooter available at location!')
-            return render_template("booking.html", form=form, Prices=prices_dict)
+            return render_template("booking.html", form=form, Prices=prices_dict, discount=discount)
 
         new_booking = models.Book(user_id=current_user.id, scooter_id=scooter.id, price=price.cost*(1-discount), duration=price.duration, datetime=curdatetime, completed=0)
         scooter.available = 2
