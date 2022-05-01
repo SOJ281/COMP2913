@@ -120,7 +120,7 @@ def employee():
             flash('No scooter available at location!')
             return render_template("employee.html", form=form, Prices=prices_dict)
 
-        new_booking = models.Book(user_id=current_user.id, scooter_id=scooter.id, price_id=price.id, datetime=curdatetime, completed=0)
+        new_booking = models.Book(user_id=current_user.id, scooter_id=scooter.id, price=price.cost, duration=price.duration, datetime=curdatetime, completed=0)
         scooter.available = 2
         db.session.add(new_booking)
         db.session.commit()
