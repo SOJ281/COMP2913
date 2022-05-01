@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="feedback">
+    <div class="question1">
+        Are you satisfied with our app? Please leave your comments here, your suggestion is our energy of progress.
+    </div>
+    <div class="question2">
+        What do you think of the app experience?
+    </div>
+    <div class="content">
+        <div class="stars">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="info">excellent</div>
+    </div>
+    <div class="tips">tips:click the stars to rate</div>
+</div>
+<script type="text/javascript">
+    var stars=document.querySelectorAll('.stars span');
+    var info=document.querySelector('.info');
+    var grades = ["very bad","bad","average","good","excellent"];
+    var active=-1;
+
+    for(var i=0;i<stars.length;i++){
+        stars[i].index=i;
+        stars[i].onmouseover=function(){setStar(this.index);};
+        stars[i].onmouseout=function(){setStar(active);};
+        stars[i].onclick=setClick;
+    }
+
+    function setStar(nub){
+        var name='';
+    name= nub<2?'show':'show2';
+    for(var i=0;i<stars.length;i++){
+        stars[i].className= i<=nub?name:'';
+    }
+    info.style.display= nub<0? 'none':'block';
+    info.innerHTML=grades[nub];
+    }
+
+    function setClick(){
+    active=this.index;
+    }
+</script>
+<div class="feedbackForm">
+    <form action="feedback"method=POST>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        {{ form.csrf }}
+        <p>Please leave your comments here<br>
+            <textarea name="comments" cols="50" rows="5"></textarea>
+            <br>
+            <button class="btn btn-outline-primary" type="submit">Submit</button>
+        </p>
+    </form>
+</div>
+
+{% endblock %}

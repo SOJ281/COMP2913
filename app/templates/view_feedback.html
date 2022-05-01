@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Staff</h1>
+
+<h2>All feedback</h2>
+
+<div class="container2">
+    <table class="table-style">
+    <thread>
+        <tr>
+            <th>Feedback ID</th>
+            <th>Username</th>
+            <th>Comment</th>
+            <th>Priority</th>
+        </tr>
+    </thread>
+    <tbody>
+        {% for i in range(Comments | length) %}
+        <tr>
+                <td>{{Comments[i].id}}</td>
+                <td>{{Users[i].username}}</td>
+                <td>{{Comments[i].comments}}</td>
+                <td>{{Comments[i].priority}}</td>
+
+                
+        </tr>
+        {% endfor %}
+
+    <table >
+</div>
+
+
+{% endblock %}

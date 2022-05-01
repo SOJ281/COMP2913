@@ -1,0 +1,167 @@
+header, section, footer, nav, main {
+    display: block;
+}
+
+/*--- main page ---*/
+
+.main {
+    text-align: center;
+}
+
+.main h1 {
+    margin-top: 150px;
+    margin-bottom: 60px;
+    font-size: 70px;
+}
+
+.main a {
+    margin-right: 20px;
+    margin-left: 20px;
+    font-size: 25px;
+}
+
+/*--- base page ---*/
+
+h1 {
+    text-align: center;
+    font-size: 70px;
+    margin-bottom: 50px;
+    margin-top: 40px;
+}
+
+.navbar {
+    background-color: #80d7ff;
+    margin-bottom: 30px;
+}
+
+.nav-link {
+    font-size: 20px;
+}
+
+.navbar a:hover {
+    color: black;
+}
+
+
+/*--- sign up/login pages ---*/
+
+.container {
+    text-align: center;
+}
+
+.container form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    margin-top: 20px;
+
+}
+
+/*--- booking page ---*/
+
+#map {
+    margin: auto;
+}
+
+.container2 {
+    margin: auto;
+    text-align: center;
+}
+
+/*--- profile page ---*/
+
+h2 {
+    text-align: center;
+}
+
+.feedback {
+    text-align: center;
+}
+
+.feedback h3 {
+    margin-left: 25px;
+    margin-top: 50px;
+    margin-bottom: 25px;
+}
+
+.feedback a {
+    margin-left: 25px;
+}
+
+.bookings {
+    margin-left: 25px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.bookings table {
+    margin: auto;
+}
+
+/*--- feedback page ---*/
+
+.stars{
+    width: 100%;
+    list-style: none;
+    line-height: 67px;
+    color: blue;
+    text-align: center;
+    margin-top: 25px;
+}
+
+.stars span{
+    font-size: 30px;
+    margin-left: 20px;
+}
+.stars span:after{
+    content: '☆';
+}
+.stars .show:after,.stars .show2:after{
+    content: '★';
+}
+
+.feedbackForm p{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 40%;
+}
+
+.question1 {
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+.question2 {
+    font-size: 20px;
+}
+
+/*--- manager page ---*/
+
+.manager {
+    margin: auto;
+    text-align: center;
+}
+
+.manager table{
+    margin: auto;
+    text-align: center;
+}
+
+/*--- price list page ---*/
+
+.container2 table {
+    margin: auto;
+    text-align: center;
+}
+
+/*--- tables styling ---*/
+
+.table-style th{
+    border: 1px solid;
+}
+
+.table-style td{
+    border: 1px solid;
+}
+

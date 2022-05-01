@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Login</h1>
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                <a>{{ messages[0] }}.</a>.
+            </div>
+        {% endif %}
+        {% endwith %}
+        <br>
+        <div class="leftColumn">
+            <p></p>
+        </div>
+
+        <div class="column">
+            <form action="/login" method=POST name="login">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                {{ form.csrf }}
+                <table>
+                    <tr>
+                        <td>Email:
+                        </td>
+                        <td>
+                            <input type="email" name="email">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Password:</td>
+                        <td><input type="password" name="password"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button class="btn btn-outline-primary">Login</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <tr></tr>
+        </div>
+    </div>
+    
+{% endblock %}

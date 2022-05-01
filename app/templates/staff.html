@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Manager page</h1>
+
+    
+
+    <div class="manager">
+        <div class="manage">
+                
+            
+                <button class="btn btn-primary" onclick="location.href='/add_scooter'">Add Scooter</button>
+            
+                <button class="btn btn-primary" onclick="location.href='/price'">View Price</button>
+                <button class="btn btn-primary" onclick="location.href='/view_feedback'">View Feedback</button>
+                <button class="btn btn-primary" onclick="location.href='/all_bookings'">All Bookings</button>
+            </div>     
+            <p id="price_view"></p>
+       <table class="table-style">
+            <thread>
+                <tr>
+                    <th>Scooter ID</th>
+                    <th>Location</th>
+                    <th>Available</th>
+                    <th></th>
+                </tr>
+            </thread>
+            <tbody>
+            {% for scooter in Scooters %}
+            <tr>
+                    <td>{{scooter.id}}</td>   
+                    <td>{{scooter.location}}</td>
+                    {% if scooter.available == 1 %}
+                    <td>Available</td>
+                    {% else %}
+                    <td>Unavailable</td>
+                    {% endif %}
+                    <td><a href="/config_scooter/{{scooter.id}}"><button class="btn btn-outline-primary btn-sm" type="button">Configure</button></a></td>           
+            </tr>
+            {% endfor %}
+        
+            </tbody>
+        </table> 
+    </div>
+    
+
+{% endblock %}

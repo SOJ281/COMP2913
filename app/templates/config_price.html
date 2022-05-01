@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Configure Price</h1>
+
+Duration:
+<br>
+{% if price.duration == 1 %}
+1 hour
+{% elif price.duration == 4 %}
+4 hour
+{% elif price.duration == 24 %}
+1 day
+{% elif price.duration == 168 %}
+1 week
+{% endif %}
+<br>
+<br>
+Current Cost:
+<br>
+{{price.cost}}£
+<br>
+<br>
+
+<form action="" method=POST name="login">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    {{ form.csrf }}
+    <table>
+        <tr>
+            <td>New Cost:
+            </td>
+            <td>
+                <input type="text" name="cost">
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p><input type="submit" value="Configure"></p>
+            </td>
+        </tr>
+    </table>
+</form>
+
+{% endblock %}

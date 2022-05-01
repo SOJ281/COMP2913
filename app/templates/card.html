@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="card-page">
+    <div class="container2">
+        <div class="card" >
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card-body" style="max-width: 900px; margin: 20vh auto 0; border: 1px solid rgb(214, 215, 218); padding: 2rem;">
+                        <!-- Form START -->
+                        <h3>Credit or Debit Card </h3>
+                        <h4>Total Price: £{{ Price }}</h4>
+
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        <div class="alert alert-danger" role="alert">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                            <span class="sr-only">Error:</span>
+                            {{ messages[0] }}
+                        </div>
+                        {% endif %}
+                        {% endwith %}
+
+                        <script>var cardHolder = [];</script>
+                        <label for="cardSelect">Saved cards:</label>
+                        <select id="cardSelect" name="cardSelect" onchange="loadCard(cardHolder);">
+                            <option value = "select">select</option>
+                            {% for i in range(cardDetails | length) %}
+                            <option value='{{cardDetails[i].number}}'>{{cardDetails[i].number}}</option>
+                            <script>cardHolder.push(['{{cardDetails[i].number}}', '{{cardDetails[i].security_code}}', '{{cardDetails[i].expiration_date}}', '{{cardDetails[i].name}}']);</script>
+                            {% endfor %}
+                        </select>
+                        <script>document.getElementById('cardSelect').value = "select";</script>
+
+
+                        <form class="row" method="post" action="/card">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                            {{ form.csrf }}
+                            <!-- Card number -->
+                            <div class="col-md-12 form-group">
+                                <label>Card Number <span class="text-danger">*</span></label>
+                                <div class="position-relative">
+                                    <input id="number" name="number" type="text" class="form-control"
+                                           placeholder="xxxx xxxx xxxx xxxx">
+                                </div>
+                            </div>
+                            <!-- Expiration Date -->
+                            <div class="col-md-6 form-group">
+                                <label>Expiration date <span class="text-danger">*</span></label>
+                                <input id = "expiration_date" name="expiration_date" type="text" class="form-control" placeholder="mm/YY">
+                            </div>
+                            <!--Cvv code  -->
+                            <div class="col-md-6 form-group">
+                                <label>CVV / CVC <span class="text-danger">*</span></label>
+                                <input id = "security_code" name="security_code" type="number" class="form-control" placeholder="xxx">
+                            </div>
+
+                            <!-- Card name -->
+                            <div class="col-md-12 form-group">
+                                <label> Name on Card <span class="text-danger">*</span></label>
+                                <input id = "name" name="name" type="text" class="form-control" aria-label="name of card holder"
+                                       placeholder="Enter card holder name">
+                            </div>
+
+                            <div class="col-md-12 form-group">
+                                <label for="Checkbox">
+                                    <input name="save" type="checkbox" id="Checkbox" value="1">
+                                    Save Card Details
+                                </label>
+                            </div>
+
+                            <div class="col-md-12 text-center">
+                                <hr>
+                                <button class="btn btn-outline-primary" type="submit">Place Order</button>
+                            </div>
+                        </form>
+                        <!-- Form END -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+<script>
+    (function (){ function loadjscssfile(filename, filetype) {if (filetype == "js") {var fileref = document.createElement('script');fileref.setAttribute("type", "text/javascript");fileref.setAttribute("src", filename);}
+     else if (filetype == "css") {var fileref = document.createElement("link");fileref.setAttribute("rel", "stylesheet");fileref.setAttribute("type", "text/css");fileref.setAttribute("href", filename);}
+     if (typeof fileref != "undefined") document.getElementsByTagName("head")[0].appendChild(fileref);} function removejscssfile(filename, filetype) {var targetelement = (filetype == "js") ? "script" : (filetype == "css") ? "link" : "none";var targetattr = (filetype == "js") ? "src" : (filetype == "css") ? "href" : "none";var allsuspects = document.getElementsByTagName(targetelement);
+     for (var i = allsuspects.length; i >= 0; i--) 
+     {if (allsuspects[i] && allsuspects[i].getAttribute(targetattr) != null && allsuspects[i].getAttribute(targetattr).indexOf(filename) != -1) {allsuspects[i].parentNode.removeChild(allsuspects[i]);}}} 
+     removejscssfile('../static/style.css','css'); loadjscssfile('../static/bootstrap.css','css'); })()
+</script>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+        <h1>
+            Your profile
+        </h1>
+        <h2>
+            Welcome {{name}}!
+        </h2>
+        {% if current_user.is_authenticated %}
+        <div class="feedback"> 
+            <h3>Would you like to give us your feedback?</h3>
+            <a class="btn btn-outline-primary" href="{{url_for('feedback')}}">Leave feedback</a>
+        </div>
+        {% endif %}
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}.</a>.
+            </div>
+        {% endif %}
+        {% endwith %}
+        <div class="bookings">
+            <table class="table-style">
+                <h3>Your bookings</h3>
+                <thread>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Location</th>
+                        <th>Duration</th>
+                        <th>Price</th>
+                        <th>Date</th>
+                    </tr>
+                </thread>
+                <tbody>
+                {% for i in range(Bookings | length) %}
+                <tr>
+                        <td>{{Bookings[i].id}}</td>
+                        <td>{{Scooters[i].location}}</td>
+                        <td>
+                            {% if Prices[i].duration == 1 %}
+                            1 hour
+                            {% elif Prices[i].duration == 4 %}
+                            4 hour
+                            {% elif Prices[i].duration == 24 %}
+                            1 day
+                            {% elif Prices[i].duration == 168 %}
+                            1 week
+                            {% endif %}
+                        </td>
+                        <td>{{Prices[i].price}}</td>
+                        <td>{{Bookings[i].datetime}}</td>
+                        <td><a class="btn btn-outline-primary btn-sm" href="/cancel_booking/{{Bookings[i].id}}">Cancel</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        
+{% endblock %}
