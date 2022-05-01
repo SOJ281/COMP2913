@@ -155,4 +155,13 @@ h2 {
     text-align: center;
 }
 
+/*--- tables styling ---*/
+
+.table-style th{
+    border: 1px solid;
+}
+
+.table-style td{
+    border: 1px solid;
+}
 
