@@ -51,7 +51,7 @@ class Prices(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     duration = db.Column(db.Integer)
     cost = db.Column(db.Integer)
-    booking = db.relationship('Book', backref='prices', lazy='dynamic')
+    #booking = db.relationship('Book', backref='prices', lazy='dynamic')
 
 
 #many-to-many relationship
@@ -61,7 +61,8 @@ class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     scooter_id = db.Column(db.Integer, db.ForeignKey('scooters.id'))
-    price_id = db.Column(db.Integer, db.ForeignKey('prices.id'))
+    price = db.Column(db.Integer)
+    duration = db.Column(db.Integer)
     datetime = db.Column(db.DateTime)
     completed = db.Column(db.Integer) #1 if booking completed, #0 if still going on
 

@@ -22,6 +22,17 @@
                         {% endif %}
                         {% endwith %}
 
+                        <script>var cardHolder = [];</script>
+                        <label for="cardSelect">Saved cards:</label>
+                        <select id="cardSelect" name="cardSelect" onchange="loadCard(cardHolder);">
+                            <option value = "select">select</option>
+                            {% for i in range(cardDetails | length) %}
+                            <option value='{{cardDetails[i].number}}'>{{cardDetails[i].number}}</option>
+                            <script>cardHolder.push(['{{cardDetails[i].number}}', '{{cardDetails[i].security_code}}', '{{cardDetails[i].expiration_date}}', '{{cardDetails[i].name}}']);</script>
+                            {% endfor %}
+                        </select>
+                        <script>document.getElementById('cardSelect').value = "select";</script>
+
 
                         <form class="row" method="post" action="/card">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
@@ -30,25 +41,25 @@
                             <div class="col-md-12 form-group">
                                 <label>Card Number <span class="text-danger">*</span></label>
                                 <div class="position-relative">
-                                    <input name="number" type="text" class="form-control"
+                                    <input id="number" name="number" type="text" class="form-control"
                                            placeholder="xxxx xxxx xxxx xxxx">
                                 </div>
                             </div>
                             <!-- Expiration Date -->
                             <div class="col-md-6 form-group">
                                 <label>Expiration date <span class="text-danger">*</span></label>
-                                <input name="expiration_date" type="text" class="form-control" placeholder="mm/YY">
+                                <input id = "expiration_date" name="expiration_date" type="text" class="form-control" placeholder="mm/YY">
                             </div>
                             <!--Cvv code  -->
                             <div class="col-md-6 form-group">
                                 <label>CVV / CVC <span class="text-danger">*</span></label>
-                                <input name="security_code" type="number" class="form-control" placeholder="xxx">
+                                <input id = "security_code" name="security_code" type="number" class="form-control" placeholder="xxx">
                             </div>
 
                             <!-- Card name -->
                             <div class="col-md-12 form-group">
                                 <label> Name on Card <span class="text-danger">*</span></label>
-                                <input name="name" type="text" class="form-control" aria-label="name of card holder"
+                                <input id = "name" name="name" type="text" class="form-control" aria-label="name of card holder"
                                        placeholder="Enter card holder name">
                             </div>
 

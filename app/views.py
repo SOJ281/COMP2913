@@ -12,11 +12,12 @@ from .scooteremail import sendConfirmationMessage
 def profile():
     bookings = []
     prices = []
+    duration = []
     scooters = []
     for i in models.Book.query.all():
         if (i.user_id == current_user.id):
             bookings.append(i)
-            prices.append(models.Prices.query.get(i.price_id))
+            prices.append(i)
             scooters.append(models.Scooters.query.get(i.scooter_id))
     return render_template("profile.html", name=current_user.username, Bookings=bookings, Prices=prices, Scooters=scooters)
 
@@ -63,7 +64,7 @@ def all_bookings():
     users = []
     for i in models.Book.query.all():
         bookings.append(i)
-        prices.append(models.Prices.query.get(i.price_id))
+        prices.append(i)
         scooters.append(models.Scooters.query.get(i.scooter_id))
         users.append(models.Users.query.get(i.user_id))
     return render_template("all_bookings.html", Users=users, Bookings=bookings, Prices=prices, Scooters=scooters)
@@ -193,6 +194,8 @@ def config_price(id):
     return render_template("config_price.html",form = form, price = price)
 
 
+#page for making new bookings
+#calculates discount
 @app.route("/booking", methods=['GET', 'POST'])
 @login_required
 def booking():
@@ -200,8 +203,26 @@ def booking():
 
     prices_dict = {}
     prices = models.Prices.query.all()
+
+    discount = 0
+
+
+    curdatetime = datetime.now()
+    date_results = []
+
+    for i in models.Book.query.filter((models.Book.datetime <= curdatetime) & (models.Book.datetime >=  curdatetime - timedelta(days=7))).all():
+        if (i.user_id == current_user.id):
+            date_results.append(i)
+
+    totalHours = 0
+    for i in date_results:
+        totalHours += i.duration
+
+    if totalHours > 30 and current_user.staff == 0:
+        discount = 0.2
+
     for p in prices:
-        prices_dict[p.duration] = p.cost
+        prices_dict[p.duration] = round(p.cost * (1-discount), 2)
 
     if form.validate_on_submit():
         duration = int(request.form.get('duration'))
@@ -209,19 +230,19 @@ def booking():
 
         scooter = models.Scooters.query.filter_by(location=location, available=1).first()
         price = models.Prices.query.filter_by(duration=duration).first()
-        curdatetime = datetime.now()
+
 
         #check if scooter at the location is free
         if scooter is None:
             flash('No scooter available at location!')
             return render_template("booking.html", form=form, Prices=prices_dict)
 
-        new_booking = models.Book(user_id=current_user.id, scooter_id=scooter.id, price_id=price.id, datetime=curdatetime, completed=0)
+        new_booking = models.Book(user_id=current_user.id, scooter_id=scooter.id, price=price.cost*(1-discount), duration=price.duration, datetime=curdatetime, completed=0)
         scooter.available = 2
         db.session.add(new_booking)
         db.session.commit()
         return redirect(url_for('card'))
-    return render_template("booking.html", form=form, Prices=prices_dict)
+    return render_template("booking.html", form=form, Prices=prices_dict, discount=discount)
 
 @app.route('/card', methods=['GET', 'POST'])
 @login_required
@@ -230,19 +251,26 @@ def card():
 
     new_booking = models.Book.query.filter_by(user_id=current_user.id).order_by(models.Book.id.desc()).first()
     scooter = new_booking.scooters
-    price = new_booking.prices
+    price = new_booking.price
+
+    cDetails = []
+    for i in models.CardDetails.query.filter_by(user_id=current_user.id):
+        cDetails.append(i)
 
     if form.validate_on_submit():
         number_string = request.form.get('number')
         expiration_date_string = request.form.get('expiration_date')
         security_code = int(request.form.get('security_code'))
         name = request.form.get('name')
+        save = request.form.get('save')
+
 
         curdatetime = datetime.now()
         success = True
 
         # Validate card number
         try:
+            number_string = number_string.replace(' ', '')
             if len(number_string) != 16:
                 raise ValueError
             number = int(number_string)
@@ -256,7 +284,7 @@ def card():
                 raise ValueError
             month = int(parts[0])
             year = int(parts[1])
-            if month not in range(1, 13) or year not in range(22, 100):
+            if month not in range(1, 13) or year not in range(curdatetime.year % 1000, 100):
                 raise ValueError
             if year == (curdatetime.year % 1000) and month < curdatetime.month:
                 raise ValueError
@@ -274,22 +302,23 @@ def card():
             flash("Payment Unsuccesful, please check card details")
             return redirect(url_for('booking'))
 
-        # cardDetails = models.CardDetails(number=number_string, name=name,
-        #                                  security_code=str(security_code),
-        #                                  expiration_date=expiration_date_string,
-        #                                  user_id=current_user.id
-        #                                  )
-        # db.session.add(cardDetails)
-        # db.session.commit()
+        if save and models.CardDetails.query.filter_by(number=number_string, name=name, security_code=str(security_code), expiration_date=expiration_date_string, user_id=current_user.id) is None:
+            cardDetails = models.CardDetails(number=number_string, name=name,
+                                            security_code=str(security_code),
+                                            expiration_date=expiration_date_string,
+                                            user_id=current_user.id
+                                            )
+            db.session.add(cardDetails)
+            db.session.commit()
         durations = {1: "1 hour",
                      4: "4 hours",
                      24: "1 day",
                      168: "1 week"}
 
-        sendConfirmationMessage(current_user.username, current_user.email, scooter.id, scooter.location, (str(curdatetime.hour)+":"+str(curdatetime.minute)), curdatetime.date(), durations.get(price.duration))
+        sendConfirmationMessage(current_user.username, current_user.email, scooter.id, scooter.location, (str(curdatetime.hour)+":"+str(curdatetime.minute)), curdatetime.date(), durations.get(new_booking.duration))
         flash('Scooter booked successfully! Please check your email for the Booking Confirmation')
         return redirect(url_for("profile"))
-    return render_template("card.html",form=form, Price=price.cost)
+    return render_template("card.html",form=form, Price=price, cardDetails=cDetails)
 
 @app.route("/cancel_booking/<id>", methods=['GET', 'POST'])
 def cancel_booking(id):
@@ -335,6 +364,7 @@ def signup():
         new_user = models.Users(username=username, age=age, email=email, password=generate_password_hash(password, method='sha256'), staff=0)
         db.session.add(new_user)
         db.session.commit()
+        login_user(models.Users.query.filter_by(username = new_user.username).first())
         return redirect(url_for("login"))
     return render_template("signup.html", form=form)
 
@@ -343,8 +373,12 @@ def signup():
 def logout():
   logout_user()
   return redirect(url_for('index'))
+    
 
-
+#Page for viewing income data
+#User inputs day,month,year, and whether the scope should be year/month/week
+#Finds all bookings in that time period, 
+#returns data in different format for easier processes
 @app.route('/price_view', methods=['GET', 'POST'])
 def price_view():
     form = monthInputForm()
@@ -361,6 +395,11 @@ def price_view():
     year = ""
     viewType = "Weekly"
     valid = True
+    timeDurations = []
+    bookings = []
+    scooters = []
+    users = []
+
     #Determines graph data and returns for days and total
     if form.validate_on_submit():
         dateHolder = request.form.get('fullDate').split('-')
@@ -369,9 +408,7 @@ def price_view():
         day = int(dateHolder[2])
         month = int(dateHolder[1])
         year = int(dateHolder[0])
-        #day = int(request.form.get('day'))
-        #month = int(request.form.get('month'))
-        #year = int(request.form.get('year'))
+        durations = {1: 0, 4:0, 24:0, 168:0}
 
         try:
             if (viewType == "Weekly"): #If weekly view
@@ -384,13 +421,19 @@ def price_view():
                     myDate = myDate + timedelta(days=1)
                     date_results = models.Book.query.filter((models.Book.datetime <= myDate) & (models.Book.datetime >=  myDate - timedelta(days=1))).all()
                     temp_val = 0
+                    timeDurations.append(durations.copy())
                     for i in date_results:
-                        temp_val += i.prices.cost
+                        bookings.append(i)
+                        scooters.append(models.Scooters.query.get(i.scooter_id))
+                        users.append(models.Users.query.get(i.user_id))
+                        temp_val += i.price
+                        timeDurations[l][i.duration] += i.price
+
                     total_income += temp_val
                     import calendar
                     income_DateAr.append(daysOfWeek[l])
                     income_Ar.append(temp_val)
-
+                    
             if (viewType == "Monthly"): #If monthly view
                 day = ""
                 from calendar import monthrange
@@ -398,13 +441,20 @@ def price_view():
                 final_date = "Month of "+datetime(year, month, 1).strftime("%d") + "/" + datetime(year, month, 1).strftime("%Y")
                 for l in reversed(range(1, length)):
                     myDate = datetime(year, month, length - l)
-                    date_results = models.Book.query.filter((models.Book.datetime <= myDate) & (models.Book.datetime >=  myDate - timedelta(days=1))).all()
+                    date_results = models.Book.query.filter((models.Book.datetime >= myDate) & (models.Book.datetime <=  myDate + timedelta(days=1))).all()
+                    #bookings.append(date_results)
                     temp_val = 0
+                    timeDurations.append(durations.copy())
                     for i in date_results:
-                        temp_val += i.prices.cost
+                        bookings.append(i)
+                        scooters.append(models.Scooters.query.get(i.scooter_id))
+                        users.append(models.Users.query.get(i.user_id))
+                        temp_val += i.price
+                        timeDurations[l-1][i.duration] += i.price
                     total_income += temp_val
                     income_DateAr.append(length - l)
                     income_Ar.append(temp_val)
+                timeDurations.reverse()
 
             if (viewType == "Yearly"): #If Yearly view
                 day = ""
@@ -418,9 +468,15 @@ def price_view():
                     else:
                         myDate = datetime(year, l+1,  1)
                     date_results = models.Book.query.filter((models.Book.datetime <= myDate) & (models.Book.datetime >= myDatec)).all()
+                    #bookings.append(date_results)
                     temp_val = 0
+                    timeDurations.append(durations.copy())
                     for i in date_results:
-                        temp_val += i.prices.cost
+                        bookings.append(i)
+                        scooters.append(models.Scooters.query.get(i.scooter_id))
+                        users.append(models.Users.query.get(i.user_id))
+                        temp_val += i.price
+                        timeDurations[l-1][i.duration] += i.price
                     total_income += temp_val
                     income_DateAr.append(l)
                     income_Ar.append(temp_val)
@@ -428,7 +484,7 @@ def price_view():
             valid = False
 
 
-    return render_template("income.html", valid = valid, viewType = viewType, final_date=final_date, total_income=total_income, income_Ar=income_Ar, income_DateAr=income_DateAr, year = year, month = month, day = day, form=form)
+    return render_template("income.html", Scooters=scooters, Users=users, Bookings=bookings, timeDurations=timeDurations, valid = valid, viewType = viewType, final_date=final_date, total_income=total_income, income_Ar=income_Ar, income_DateAr=income_DateAr, year = year, month = month, day = day, form=form)
 
 
 @app.route("/price", methods=['GET', 'POST'])

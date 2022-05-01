@@ -20,22 +20,25 @@
             <td>
                 Total
             </td>
-            <td>
-                {{total_income}}
+            <td id = "totalIncome">
             </td>
         </tr>
         </tr>
     </tbody>
     </table>
-    <canvas id="myChart" style="width:80%;height:400px;"></canvas>
+    <graphContainer id = graphContainer><canvas id="myChart" style="width:80%;height:400px;"></canvas></graphContainer>
     <form action="/price_view" method=POST name="date">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         {{ form.csrf }}
-        <script>genChart('{{income_DateAr}}', '{{income_Ar}}', '{{final_date}}'); </script>
+        <script>
+            genChart('{{income_DateAr}}', '{{income_Ar}}', '{{final_date}}');
+            showBookings("all");
+            function genGenChart(table) {genChart('{{income_DateAr}}', arrayDates[table].slice(0, -1), '{{final_date}}');}
+        </script>
         <select id="viewType" name="viewType" onchange = "changeView()" >
             <option value="Weekly">Weekly</option>
             <option value="Monthly">Monthly</option>
-            <option value="Yearly">Year</option>
+            <option value="Yearly">Yearly</option>
         </select>
         <table>
             <tr>
@@ -43,25 +46,6 @@
                     <input type="date" name="fullDate">
                 </td>
             </tr>
-            <!--
-            <tr id = "dayC">
-                <td>day:
-                </td>
-                <td>
-                    <input id = "day" type="day" name="day" value="{{day}}">
-                </td>
-            </tr>
-            <tr id = "monthC">
-                <td>month:
-                </td>
-                <td>
-                    <input id = "month" type="month" name="month" value="{{month}}">
-                </td>
-            </tr>
-            <tr id = "yearC">
-                <td>year:</td>
-                <td><input id = "year" type="year" name="year" value="{{year}}"></td>
-            </tr>-->
             <tr>
                 <td>
                 <button>submit</button>
@@ -69,18 +53,6 @@
             </tr>
         </table>
         <script>
-            /*alert('{{day}}-{{month}}-{{year}}');
-            //var mon = '{{month}}';
-            if (mon.length == 1)
-                mon = '0' + mon;
-            alert(mon);
-            var today = moment().format('{{day}}/'+mon+'/{{year}}');
-            alert('{{day}}-{{month}}-{{year}}');
-            document.getElementById("fullDate").value = today;*/
-           // var date = new Date();
-            //date.setYear(parseInt())
-            //date.setMonth()
-            //date.setDate()
             document.getElementById("fullDate").valueAsDate = new Date(parseInt('{{year}}'), parseInt('{{month}}'), parseInt('{{day}}'));
 
             document.querySelector('#viewType').value = '{{viewType}}';
@@ -89,6 +61,61 @@
                 alert("Invalid date entered");
             }
         </script>
+        <script> var arrayDates = [,,,,'{{income_Ar}}'];</script>
+        {% for i in range(timeDurations | length) %}
+        <script>
+            arrayDates[0] += '{{timeDurations[i][1]}},';
+            arrayDates[1] += '{{timeDurations[i][4]}},';
+            arrayDates[2] += '{{timeDurations[i][24]}},';
+            arrayDates[3] += '{{timeDurations[i][168]}},';
+        </script>
+        {% endfor %}
+        <label for="duration">Duration</label>
+        <select id="duration" name="duration" onchange = "genGenChart(document.getElementById('duration').value);showBookings(document.getElementById('duration').value);">
+            <option value=0>1 hour</option>
+            <option value=1>4 hours</option>
+            <option value=2>1 day</option>
+            <option value=3>1 week</option>
+            <option value=4 selected>all</option>
+        </select>
+        <script>document.getElementById('duration').value = 4;</script>
+        <br>
+        <table >
+            <h3>Bookings</h3>
+            <thread>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Username</th>
+                    <th>Location</th>
+                    <th>Duration</th>
+                    <th>Price</th>
+                    <th>Date</th>
+                </tr>
+            </thread>
+            <tbody>
+                {% for i in range(Bookings | length) %}
+                <tr class = "{{Bookings[i].duration}}">
+                        <td>{{Bookings[i].id}}</td>
+                        <td>{{Users[i].username}}</td>
+                        <td>{{Scooters[i].location}}</td>
+                        <td>
+                            {% if Bookings[i].duration == 1 %}
+                            1 hour
+                            {% elif Bookings[i].duration == 4 %}
+                            4 hour
+                            {% elif Bookings[i].duration == 24 %}
+                            1 day
+                            {% elif Bookings[i].duration == 168 %}
+                            1 week
+                            {% endif %}
+                        </td>
+                        <td>{{Bookings[i].price}}</td>
+                        <td>{{Bookings[i].datetime}}</td>
+                        
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </form>
     <script></script>
 {% endblock %}
