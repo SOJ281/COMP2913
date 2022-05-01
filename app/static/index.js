@@ -32,7 +32,8 @@ $('.tab a').on('click', function (e) {
   $(target).fadeIn(600);
 });
 
-
+//Uses google maps geocode API to generate marker at postcode
+//Refocuses map and returns
 function showLocation() {
   var mapDict = {
     "Trinity centre" : ["27 Albion St, Leeds LS1 5AT"],
@@ -65,35 +66,9 @@ function showLocation() {
   });
 }
 
-function changeView() {
-  var value = document.getElementById('viewType').value;
-  if (value == "Weekly") {
-    document.getElementById("day").value = "";
-    document.getElementById("month").value = "";
-    document.getElementById("year").value = "";
-
-    document.getElementById('dayC').hidden = false;
-    document.getElementById('monthC').hidden = false;
-    document.getElementById('yearC').hidden = false;
-  } else if (value == "Monthly") {
-    document.getElementById("day").value = "-1";
-    document.getElementById("month").value = "";
-    document.getElementById("year").value = "";
-
-    document.getElementById('dayC').hidden = true;
-    document.getElementById('monthC').hidden = false;
-    document.getElementById('yearC').hidden = false;
-  } else if (value == "Yearly") {
-    document.getElementById("day").value = "-1";
-    document.getElementById("month").value = "-1";
-    document.getElementById("year").value = "";
-
-    document.getElementById('dayC').hidden = true;
-    document.getElementById('monthC').hidden = true;
-    document.getElementById('yearC').hidden = false;
-  }
-}
-
+//Generates chart for displaying income data
+//takes x/y data as comma seperated value strings
+//uses chart.js to generate table on canvas
 function genChart(date, data, tableName) {
   date = date.replace('[', '');
   date = date.replace(']', '');
@@ -102,9 +77,18 @@ function genChart(date, data, tableName) {
 
   data = data.replace('[', '');
   data = data.replace(']', '');
+  data = data.replace('undefined', '');
   data.replace('&#39;','');
   var values = data.split(',');
 
+  var total = 0;
+  for (var i = 0; i < values.length; i++)
+    total += parseInt(values[i]);
+  document.getElementById('totalIncome').innerHTML = total;
+
+
+  document.getElementById('myChart').remove(); // this is my <canvas> element
+  document.getElementById('graphContainer').innerHTML = '<canvas id="myChart" style="width:80%;height:400px;"></canvas>';
   const ctx = document.getElementById("myChart").getContext('2d');
   const myChart = new Chart(ctx, {
     type: 'line',
@@ -142,6 +126,38 @@ function genChart(date, data, tableName) {
   });
 }
 
+//Shows/hides bookings in the table for income
+function showBookings(duration) {
+  var dict = {
+    0 : "1",
+    1 : "4",
+    2 : "24",
+    3 : "168",
+    4 : "all"
+  };
+  if (duration != 4) {
+    var elements
+    for (var i = 0; i < 4; i++) {
+      elements = document.getElementsByClassName(dict[i]);
+      for(var l = 0; l < elements.length; l++) {
+        elements[l].hidden = true;
+      }
+    }
+    var ele = document.getElementsByClassName(dict[duration]);
+    for(var i = 0; i < ele.length; i++) {
+      ele[i].hidden = false;
+    }
+  } else {
+    for (i = 0; i < 4; i++) {
+      //document.getElementById(dict[i]).hidden = false;
+      var elements = document.getElementsByClassName(dict[i]);
+      for(var l = 0; l < elements.length; l++) {
+        elements[l].hidden = false;
+      }
+    }
+  }
+}
+
 
 function showCost(duration, cost) {
   duration = duration.replace('[', '');
@@ -159,4 +175,20 @@ function showCost(duration, cost) {
       document.getElementById("costed").innerHTML = cos[i]+"";
     }
   }
+}
+
+function loadCard(cardArray) {
+  var number = document.getElementById("cardSelect").value+"";
+  var index;
+  for (i = 0; i < cardArray.length; i++) {
+    if (cardArray[i][0] == number) {
+      index = i;
+      break;
+    }
+  }
+  document.getElementById("number").value = cardArray[i][0];
+  document.getElementById("security_code").value = cardArray[i][1];
+  document.getElementById("expiration_date").value = cardArray[i][2];
+  document.getElementById("name").value = cardArray[i][3];
+
 }
